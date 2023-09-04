@@ -3,6 +3,7 @@
         "appinventor/components/src"
     ],
     "java.project.referencedLibraries": [
-        "lib/**/*.jar"
+        "lib/**/*.jar",
+        "c:\\Users\\ferna\\Documents\\Ubuntu-Windows\\jar\\org.json.jar"
     ]
 }
