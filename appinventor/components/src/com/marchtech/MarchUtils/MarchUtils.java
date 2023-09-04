@@ -357,7 +357,7 @@ public class MarchUtils extends AndroidNonvisibleComponent {
             return YailList.makeList(toList(array));
         }
 
-        return "It's not JSON";
+        return "It's not a JSON";
     }
 
     private Map<Object, Object> toMap(JSONObject json) throws JSONException {
