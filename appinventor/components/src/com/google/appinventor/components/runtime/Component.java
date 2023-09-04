@@ -156,4 +156,9 @@ public interface Component {
   static final String LISTVIEW_KEY_MAIN_TEXT = "Text1";
   static final String LISTVIEW_KEY_DESCRIPTION = "Text2";
   static final String LISTVIEW_KEY_IMAGE = "Image";
+
+  static final int DELAY_NORMAL = 0;
+  static final int DELAY_UI = 1;
+  static final int DELAY_GAME = 2;
+  static final int DELAY_FASTEST = 3;
 }

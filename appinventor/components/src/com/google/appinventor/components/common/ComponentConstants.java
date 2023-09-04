@@ -118,5 +118,10 @@ public class ComponentConstants {
    */
   public static final int CHART_PREFERRED_WIDTH = 176;
   public static final int CHART_PREFERRED_HEIGHT = 144;
+
+  public static final int DELAY_NORMAL = 0;
+  public static final int DELAY_UI = 1;
+  public static final int DELAY_GAME = 2;
+  public static final int DELAY_FASTEST = 3;
 }
 
