@@ -1,11 +1,9 @@
 package com.marchtech.MarchUtils;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -27,12 +25,6 @@ import com.marchtech.MarchUtils.helpers.Sort;
 @DesignerComponent(version = 1, description = "Extension to help you.", category = ComponentCategory.EXTENSION, nonVisible = true, iconName = Icon.ICON)
 @SimpleObject(external = true)
 public class MarchUtils extends AndroidNonvisibleComponent {
-    private final int SAME = 0;
-    private final int BEFORE_AFTER = -1;
-    private final int AFTER_BEFORE = 1;
-    private final int BEFORE = -2;
-    private final int AFTER = 2;
-
     public MarchUtils(ComponentContainer container) {
         super(container.$form());
     }
