@@ -4,6 +4,7 @@
     ],
     "java.project.referencedLibraries": [
         "lib/**/*.jar",
-        "c:\\Users\\ferna\\Documents\\Ubuntu-Windows\\jar\\org.json.jar"
+        "c:\\Users\\ferna\\Documents\\Ubuntu-Windows\\jar\\org.json.jar",
+        "appinventor\\lib\\android\\android-31\\android.jar"
     ]
 }

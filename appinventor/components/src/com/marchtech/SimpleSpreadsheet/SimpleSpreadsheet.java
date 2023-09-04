@@ -22,7 +22,6 @@ import java.util.concurrent.FutureTask;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.google.appinventor.components.annotations.*;
 import com.google.appinventor.components.common.*;
@@ -57,7 +56,6 @@ public class SimpleSpreadsheet extends AndroidNonvisibleComponent {
     private final CookieHandler cookieHandler;
 
     private String url = "";
-    private String spreadsheetUrl = "";
     private String scriptUrl = "";
     private String id = "";
     private String sheet = "Sheet1";
