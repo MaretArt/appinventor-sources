@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.google.appinventor.components.annotations.*;
@@ -347,7 +348,7 @@ public class MarchUtils extends AndroidNonvisibleComponent {
     }
 
     @SimpleFunction(description = "Returns a dictionary after converting data of onesignal.")
-    public Object ConvertJSONString(Object json) {
+    public Object ConvertJSONString(Object json) throws JSONException {
         if (json instanceof JSONObject) {
             JSONObject object = new JSONObject(json);
             return YailDictionary.makeDictionary(toMap(object));
@@ -359,7 +360,7 @@ public class MarchUtils extends AndroidNonvisibleComponent {
         return "It's not JSON";
     }
 
-    private Map<Object, Object> toMap(JSONObject json) {
+    private Map<Object, Object> toMap(JSONObject json) throws JSONException {
         Map<Object, Object> result = new HashMap<>();
         Iterator<Object> keys = json.keys();
         while (keys.hasNext()) {
@@ -376,7 +377,7 @@ public class MarchUtils extends AndroidNonvisibleComponent {
         return result;
     }
 
-    private List<Object> toList(JSONArray json) {
+    private List<Object> toList(JSONArray json) throws JSONException {
         List<Object> list = new ArrayList<>();
         for (int i = 0; i < json.length(); i++) {
             Object value = json.get(i);
