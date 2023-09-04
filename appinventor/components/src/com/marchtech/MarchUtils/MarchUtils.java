@@ -349,10 +349,10 @@ public class MarchUtils extends AndroidNonvisibleComponent {
 
     @SimpleFunction(description = "Returns a dictionary after converting data of onesignal.")
     public Object ConvertJSONString(Object json) throws JSONException {
-        if (json instanceof JSONObject) {
+        if (String.valueOf(json).startsWith("{")) {
             JSONObject object = new JSONObject(String.valueOf(json));
             return YailDictionary.makeDictionary(toMap(object));
-        } else if (json instanceof JSONArray) {
+        } else if (String.valueOf(json).startsWith("[")) {
             JSONArray array = new JSONArray(String.valueOf(json));
             return YailList.makeList(toList(array));
         }
