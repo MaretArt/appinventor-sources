@@ -15,14 +15,11 @@ import com.marchtech.Icon;
 import com.marchtech.FileUtils.helpers.Size;
 
 import android.annotation.SuppressLint;
+import android.os.Environment;
 
-@DesignerComponent( version = 1,
-                    description = "Extension to help you working with file.",
-                    category = ComponentCategory.EXTENSION,
-                    nonVisible = true,
-                    iconName = Icon.ICON)
+@DesignerComponent(version = 1, description = "Extension to help you working with file.", category = ComponentCategory.EXTENSION, nonVisible = true, iconName = Icon.ICON)
 @SimpleObject(external = true)
-@SuppressLint({"InlinedApi", "SdCardPath"})
+@SuppressLint({ "InlinedApi", "SdCardPath" })
 public class FileUtils extends AndroidNonvisibleComponent {
 
     private boolean clearCache = false;
@@ -31,15 +28,17 @@ public class FileUtils extends AndroidNonvisibleComponent {
         super(container.$form());
     }
 
-    @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_BOOLEAN, defaultValue = "True")
+    @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_BOOLEAN, defaultValue = "False")
     @SimpleProperty(description = "To enable read access to file storage outside of the app-specific directories.")
     @UsesPermissions(READ_EXTERNAL_STORAGE)
-    public void ReadPermission(boolean required) {}
+    public void ReadPermission(boolean required) {
+    }
 
-    @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_BOOLEAN, defaultValue = "True")
+    @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_BOOLEAN, defaultValue = "False")
     @SimpleProperty(description = "To enable write access to file storage outside of the app-specific directories.")
     @UsesPermissions(WRITE_EXTERNAL_STORAGE)
-    public void WritePermission(boolean required) {}
+    public void WritePermission(boolean required) {
+    }
 
     @SimpleEvent(description = "An event that occurrs when directory has been created.")
     public void DirectoryCreated(String path, String directoryName) {
@@ -61,12 +60,24 @@ public class FileUtils extends AndroidNonvisibleComponent {
         EventDispatcher.dispatchEvent(this, "DirectoryRemoved", list);
     }
 
+    @SimpleEvent(description = "An event that occurrs when file is moved.")
+    public void Moved(Object fileName) {
+        EventDispatcher.dispatchEvent(this, "Moved", fileName);
+    }
+
+    @SimpleEvent(description = "An event that occurrs when error occurred.")
+    public void ErrorOccurred(Object messages) {
+        EventDispatcher.dispatchEvent(this, "ErrorOccurred", messages);
+    }
+
     @SimpleFunction(description = "Create a new directory for storing files.")
     public void MakeDirectory(FileScope scope, String directoryName) {
         File file = new File(MakeFullPath(scope, directoryName));
         try {
-            if (Exists(scope, directoryName)) DirectoryCreated(MakeFullPath(scope, directoryName), directoryName);
-            else file.mkdirs();
+            if (Exists(scope, directoryName))
+                DirectoryCreated(MakeFullPath(scope, directoryName), directoryName);
+            else
+                file.mkdirs();
         } catch (SecurityException e) {
             e.printStackTrace();
         }
@@ -76,12 +87,14 @@ public class FileUtils extends AndroidNonvisibleComponent {
             return;
         }
 
-        if (Exists(scope, directoryName)) DirectoryCreated(MakeFullPath(scope, directoryName), directoryName);
+        if (Exists(scope, directoryName))
+            DirectoryCreated(MakeFullPath(scope, directoryName), directoryName);
     }
 
     @SimpleFunction(description = "Remove a directory from the file system.")
     public void RemoveDirectory(FileScope scope, String directoryName, boolean recursive) {
-        if (recursive) deleteRecursive(new File(MakeFullPath(scope, directoryName)));
+        if (recursive)
+            deleteRecursive(new File(MakeFullPath(scope, directoryName)));
         else {
             File mFile = new File(MakeFullPath(scope, directoryName));
             mFile.delete();
@@ -91,7 +104,8 @@ public class FileUtils extends AndroidNonvisibleComponent {
             clearCache = false;
             return;
         }
-        if (!Exists(scope, directoryName)) DirectoryRemoved(MakeFullPath(scope, directoryName), directoryName);
+        if (!Exists(scope, directoryName))
+            DirectoryRemoved(MakeFullPath(scope, directoryName), directoryName);
     }
 
     @SimpleFunction(description = "Tests whether the path exists in the given scope.")
@@ -146,11 +160,16 @@ public class FileUtils extends AndroidNonvisibleComponent {
     public double GetSize(Size sizeIn, FileScope scope, String path) {
         File file = new File(MakeFullPath(scope, path));
         long size = getFolderSize(file);
-        if (sizeIn == Size.Byte) return (double)size;
-        else if (sizeIn == Size.KiloByte) return (double)size / 1024.0;
-        else if (sizeIn == Size.MegaByte) return (double)size / (Math.pow(1024.0, 2));
-        else if (sizeIn == Size.GigaByte) return (double)size / (Math.pow(1024.0, 3));
-        else return -1;
+        if (sizeIn == Size.Byte)
+            return (double) size;
+        else if (sizeIn == Size.KiloByte)
+            return (double) size / 1024.0;
+        else if (sizeIn == Size.MegaByte)
+            return (double) size / (Math.pow(1024.0, 2));
+        else if (sizeIn == Size.GigaByte)
+            return (double) size / (Math.pow(1024.0, 3));
+        else
+            return -1;
     }
 
     @SimpleFunction(description = "To get total file and directory.")
@@ -163,6 +182,19 @@ public class FileUtils extends AndroidNonvisibleComponent {
     public String GetName(String path) {
         File file = new File(path);
         return file.getName();
+    }
+
+    @SimpleFunction(description = "To move file into Pictures directory.")
+    public void MoveIntoPictures(String fromFileName, String toFileName) {
+        File from = new File(fromFileName);
+        File to = new File(Environment.DIRECTORY_PICTURES + toFileName);
+        try {
+            from.renameTo(to);
+        } catch (SecurityException e) {
+            ErrorOccurred(e.getMessage());
+        }
+
+        Moved(toFileName);
     }
 
     private void deleteRecursive(File folder) {
@@ -180,8 +212,10 @@ public class FileUtils extends AndroidNonvisibleComponent {
         File[] files = folder.listFiles();
 
         for (int i = 0; i < files.length; i++) {
-            if (files[i].isFile()) length += files[i].length();
-            else length += getFolderSize(files[i]);
+            if (files[i].isFile())
+                length += files[i].length();
+            else
+                length += getFolderSize(files[i]);
         }
 
         return length;
@@ -193,7 +227,8 @@ public class FileUtils extends AndroidNonvisibleComponent {
 
         if (recursive) {
             for (int i = 0; i < files.length; i++) {
-                if (files[i].isDirectory()) total += getTotalFile(files[i], true);
+                if (files[i].isDirectory())
+                    total += getTotalFile(files[i], true);
             }
         }
 
