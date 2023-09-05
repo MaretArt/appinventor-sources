@@ -18,6 +18,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.FutureTask;
 
 import org.json.JSONArray;
@@ -55,6 +57,8 @@ public class SimpleSpreadsheet extends AndroidNonvisibleComponent {
     private final Activity activity;
     private final CookieHandler cookieHandler;
 
+    private Timer timer;
+
     private String url = "";
     private String scriptUrl = "";
     private String id = "";
@@ -69,6 +73,9 @@ public class SimpleSpreadsheet extends AndroidNonvisibleComponent {
     private FutureTask<Void> lastTask = null;
 
     private List<String> tag = new ArrayList<>();
+
+    private String lastData = "";
+    private List<String> datas = new ArrayList<>();
 
     public SimpleSpreadsheet(ComponentContainer container) {
         super(container.$form());
@@ -133,12 +140,45 @@ public class SimpleSpreadsheet extends AndroidNonvisibleComponent {
         EventDispatcher.dispatchEvent(this, "OnFailed", functionName, messages);
     }
 
+    @SimpleEvent(description = "Occurrs when data has been changed.")
+    public void DataChanged(Object tag, Object value) {
+        EventDispatcher.dispatchEvent(this, "DataChanged", tag, value);
+    }
+
     @SimpleFunction(description = "To initialize extension.")
     public void Initialize(YailList keys) {
         tag = new ArrayList<>();
         for (Object t : keys.toArray()) {
             tag.add(t.toString());
         }
+
+        timer = new Timer("DataChanged");
+        TimerTask getChanged = new TimerTask() {
+            @Override
+            public void run() {
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        url = "https://spreadsheet.google.com/tq?tqx=out:csv&key=" + id + "&gid=" + sheetId + "&tq";
+                        final String METHOD = "Get";
+                        final CapturedProperties webProps = capturePropertyValues(METHOD);
+                        if (webProps == null)
+                            return;
+
+                        lastTask = new FutureTask<Void>(new Runnable() {
+                            @Override
+                            public void run() {
+                                performRequest("DataChanged", null, null, 0, null, webProps, null, "GET", METHOD);
+                            }
+                        }, null);
+
+                        AsynchUtil.runAsynchronously(lastTask);
+                    }
+                });
+            }
+        };
+
+        timer.scheduleAtFixedRate(getChanged, 10, 2000);
     }
 
     @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_STRING, defaultValue = "")
@@ -660,6 +700,25 @@ public class SimpleSpreadsheet extends AndroidNonvisibleComponent {
         return YailList.makeList(result);
     }
 
+    private boolean isChanged(final String responseContent) {
+        if (responseContent != lastData) {
+            lastData = responseContent;
+            return true;
+        }
+
+        return false;
+    }
+
+    private List<Object> getDataChanged(final String responseContent) {
+        List<String> values = new ArrayList<>();
+        String[] data = responseContent.split("\n");
+        for (int i = 1; i < data.length; i++) {
+            values.add(data[i]);
+        }
+
+        return null;
+    }
+
     private List<Object> convertJSONToList(String string) {
         string = "[" + string + "]";
         StringBuilder sb = new StringBuilder(string);
@@ -740,7 +799,10 @@ public class SimpleSpreadsheet extends AndroidNonvisibleComponent {
                                 GotAll(as, getAll(as, responseContent));
                             else if (mode.equals("GetAllValue"))
                                 GotAllValue(data, getAllValue(data.toString(), responseContent));
-                            else {
+                            else if (mode.equals("DataChanged")) {
+                                if (isChanged(responseContent)) {
+                                }
+                            } else {
                                 if (responseCode == 200) {
                                     if (mode.equals("Add"))
                                         Added(value);
