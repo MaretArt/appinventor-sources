@@ -188,13 +188,12 @@ public class FileUtils extends AndroidNonvisibleComponent {
     public void MoveIntoPictures(String fromFileName, String toFileName) {
         File from = new File(fromFileName);
         File to = new File(Environment.DIRECTORY_PICTURES + toFileName);
-        try {
-            from.renameTo(to);
-        } catch (SecurityException e) {
-            ErrorOccurred(e.getMessage());
-        }
+        from.renameTo(to);
 
-        Moved(toFileName);
+        if (to.exists())
+            Moved(toFileName);
+        else
+            ErrorOccurred((Object) "Move file into Pictures" + toFileName + "is failed!");
     }
 
     private void deleteRecursive(File folder) {
