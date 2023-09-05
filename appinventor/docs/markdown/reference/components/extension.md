@@ -324,8 +324,14 @@ Component for FileUtils
 {:id="FileUtils.DirectoryRemoved"} DirectoryRemoved(*path*{:.text},*directoryName*{:.text})
 : An event that occurrs when directory has been removed.
 
+{:id="FileUtils.ErrorOccurred"} ErrorOccurred(*messages*{:.any})
+: An event that occurrs when error occurred.
+
 {:id="FileUtils.GotLists"} GotLists(*list*{:.list})
 : An event that occurrs when got list of file and directory.
+
+{:id="FileUtils.Moved"} Moved(*fileName*{:.any})
+: An event that occurrs when file is moved.
 
 ### Methods  {#FileUtils-Methods}
 
@@ -360,6 +366,9 @@ Component for FileUtils
 
 {:id="FileUtils.MakeFullPath" class="method returns text"} <i/> MakeFullPath(*scope*{:.com.google.appinventor.components.common.FileScopeEnum},*path*{:.text})
 : Converts the scope and path into a single string for other components.
+
+{:id="FileUtils.MoveIntoPictures" class="method"} <i/> MoveIntoPictures(*fromFileName*{:.text},*toFileName*{:.text})
+: To move file into Pictures directory.
 
 {:id="FileUtils.RemoveDirectory" class="method"} <i/> RemoveDirectory(*scope*{:.com.google.appinventor.components.common.FileScopeEnum},*directoryName*{:.text},*recursive*{:.boolean})
 : Remove a directory from the file system.
@@ -1388,6 +1397,9 @@ Component for SimpleSpreadsheet
 
 {:id="SimpleSpreadsheet.AllEdited"} AllEdited(*tag*{:.any},*value*{:.any})
 : On edited all value.
+
+{:id="SimpleSpreadsheet.DataChanged"} DataChanged(*tag*{:.any},*value*{:.any})
+: Occurrs when data has been changed.
 
 {:id="SimpleSpreadsheet.Deleted"} Deleted(*tag*{:.any})
 : On deleted tag.
