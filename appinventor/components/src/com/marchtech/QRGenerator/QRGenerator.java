@@ -10,7 +10,6 @@ import java.io.FileOutputStream;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
 
 import com.google.appinventor.components.annotations.*;
@@ -29,7 +28,6 @@ import com.google.zxing.RGBLuminanceSource;
 import com.google.zxing.Result;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.HybridBinarizer;
-import com.google.zxing.datamatrix.encoder.SymbolShapeHint;
 
 import com.marchtech.Icon;
 import com.marchtech.QRGenerator.helpers.BarFormat;
