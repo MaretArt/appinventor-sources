@@ -182,11 +182,11 @@
     <!-- END Android Support Libraries -->
     <copy toFile="${public.deps.dir}/android.jar" file="${android.lib}" />
     <copy toFile="${public.deps.dir}/CommonVersion.jar" file="${build.dir}/common/CommonVersion.jar" />
+    <copy toFile="${public.deps.dir}/zxing.jar" file="${lib.dir}/zxing/zxing-3.5.2.jar" />
 
     <!-- Add extension libraries here -->
     <!-- Example: <copy toFile="${public.deps.dir}/my-dependency.jar" file="${lib.dir}/my-dependency/my-dependency-1.0.0.jar" /> -->
     <!-- Remember to include my-dependency.jar in the @UsesLibraries annotation in the extension -->
-    <copy toFile="${public.deps.dir}/zxing.jar" file="${lib.dir}/zxing/core-3.5.2.jar" />
   </target>
 
   <path id="AndroidRuntime.path">

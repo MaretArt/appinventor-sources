@@ -9,6 +9,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.EnumMap;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -16,6 +17,7 @@ import com.google.appinventor.components.annotations.*;
 import com.google.appinventor.components.common.*;
 import com.google.appinventor.components.runtime.*;
 import com.google.appinventor.components.runtime.util.AsynchUtil;
+
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.DecodeHintType;
@@ -28,6 +30,7 @@ import com.google.zxing.Result;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.datamatrix.encoder.SymbolShapeHint;
+
 import com.marchtech.Icon;
 import com.marchtech.QRGenerator.helpers.BarFormat;
 import com.marchtech.QRGenerator.helpers.Charset;
@@ -42,7 +45,7 @@ import android.graphics.Matrix;
 @DesignerComponent(version = 1, description = "Extension to generate qr code.", category = ComponentCategory.EXTENSION, nonVisible = true, iconName = Icon.ICON)
 @SimpleObject(external = true)
 @UsesPermissions(permissionNames = READ_EXTERNAL_STORAGE + "," + WRITE_EXTERNAL_STORAGE)
-@UsesLibraries(libraries = "core-3.5.2.jar")
+@UsesLibraries(libraries = "zxing-3.5.2.jar")
 public class QRGenerator extends AndroidNonvisibleComponent {
     private Activity activity;
     private SymbolShapeHint shapeHint = SymbolShapeHint.FORCE_NONE;
@@ -223,12 +226,11 @@ public class QRGenerator extends AndroidNonvisibleComponent {
     private Bitmap writer(String content, BarcodeFormat barFormat, int width, int height, int margin, String charset,
             int fColor, int bgColor, String logoPath) {
         try {
-            Hashtable<EncodeHintType, Object> hints = new Hashtable<>();
+            Map<EncodeHintType, Object> hints = new HashMap<>();
             hints.put(EncodeHintType.CHARACTER_SET, charset);
             hints.put(EncodeHintType.MARGIN, margin);
-            if (shapeHint != SymbolShapeHint.FORCE_NONE) {
+            if (shapeHint != SymbolShapeHint.FORCE_NONE)
                 hints.put(EncodeHintType.DATA_MATRIX_SHAPE, shapeHint);
-            }
 
             MultiFormatWriter codeWriter = new MultiFormatWriter();
             BitMatrix bitMatrix = codeWriter.encode(content, barFormat, width, height, hints);

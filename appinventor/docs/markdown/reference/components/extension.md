@@ -736,14 +736,20 @@ Component for QRGenerator
 {:id="QRGenerator.BackgroundColor" .color} *BackgroundColor*
 : Set background color of qr code.
 
-{:id="QRGenerator.Color" .color} *Color*
-: Set color of qr code.
+{:id="QRGenerator.Content" .text} *Content*
+: Set text of qr code.
 
 {:id="QRGenerator.Height" .number} *Height*
 : Set height of qr code.
 
-{:id="QRGenerator.Text" .text} *Text*
-: Set text of qr code.
+{:id="QRGenerator.QRColor" .color} *QRColor*
+: Set color of qr code.
+
+{:id="QRGenerator.Shape" .text .wo} *Shape*
+: Specifies barcode shape.<br> Note: Normally you wouldn't need to use this.
+
+{:id="QRGenerator.UseAdditionalDecoders" .boolean .wo} *UseAdditionalDecoders*
+: Specifies whether decoders should use additional hints.
 
 {:id="QRGenerator.Width" .number} *Width*
 : Set width of qr code.
@@ -751,14 +757,24 @@ Component for QRGenerator
 ### Events  {#QRGenerator-Events}
 
 {:.events}
-None
 
+{:id="QRGenerator.Decoded"} Decoded(*barFormat*{:.com.marchtech.QRGenerator.helpers.BarFormatEnum},*result*{:.text})
+: An event that occurrs when barcode has been decoded.
+
+{:id="QRGenerator.ErrorOccurred"} ErrorOccurred(*functionName*{:.text},*messages*{:.text})
+: An event that occurrs when generated/decoded barcode failed.
+
+{:id="QRGenerator.Generated"} Generated(*filePath*{:.text})
+: An event that occurrs when barcode has been genarated.
 
 ### Methods  {#QRGenerator-Methods}
 
 {:.methods}
 
-{:id="QRGenerator.Generate" class="method"} <i/> Generate(*component*{:.component})
+{:id="QRGenerator.Decode" class="method"} <i/> Decode(*filePath*{:.text})
+: To decode barcode from file.
+
+{:id="QRGenerator.Generate" class="method"} <i/> Generate(*content*{:.text},*outputPath*{:.text},*logoPath*{:.text},*fileFormat*{:.com.marchtech.QRGenerator.helpers.FileFormatEnum},*barFormat*{:.com.marchtech.QRGenerator.helpers.BarFormatEnum},*charset*{:.text})
 : To generate qr code.
 
 ## SimpleBluetooth  {#SimpleBluetooth}
