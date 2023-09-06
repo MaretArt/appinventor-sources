@@ -11,6 +11,7 @@ import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.FutureTask;
 
 import com.google.appinventor.components.annotations.*;
 import com.google.appinventor.components.common.*;
@@ -46,10 +47,9 @@ import android.graphics.Matrix;
 @UsesLibraries(libraries = "zxing-3.5.2.jar")
 public class QRGenerator extends AndroidNonvisibleComponent {
     private Activity activity;
+    private FutureTask<Void> lastTask = null;
 
     private boolean useAddDecoders = false;
-
-    private String CONTENT = "QRGenerator";
 
     private int WIDTH = 300;
     private int HEIGHT = 300;
@@ -84,17 +84,6 @@ public class QRGenerator extends AndroidNonvisibleComponent {
     @SimpleProperty(description = "Specifies whether decoders should use additional hints.")
     public void UseAdditionalDecoders(boolean use) {
         useAddDecoders = use;
-    }
-
-    @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_STRING, defaultValue = "QRGenerator")
-    @SimpleProperty(description = "Set text of qr code.", category = PropertyCategory.APPEARANCE)
-    public void Content(String text) {
-        this.CONTENT = text;
-    }
-
-    @SimpleProperty
-    public String Content() {
-        return CONTENT;
     }
 
     @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_NON_NEGATIVE_INTEGER, defaultValue = "300")
@@ -142,30 +131,47 @@ public class QRGenerator extends AndroidNonvisibleComponent {
     }
 
     @SimpleFunction(description = "To generate qr code.")
-    public void Generate(final String content, final String outputPath, final String logoPath,
-            final FileFormat fileFormat, final BarFormat barFormat, @Options(Charset.class) final String charset) {
-        AsynchUtil.runAsynchronously(new Runnable() {
+    public void Generate(String content, String outputPath, String logoPath,
+            FileFormat fileFormat, BarFormat barFormat, @Options(Charset.class) String charset) {
+        lastTask = new FutureTask<Void>(new Runnable() {
             @Override
             public void run() {
-                File file = new File(outputPath);
-                try {
-                    FileOutputStream output = new FileOutputStream(file);
-                    Bitmap bitmap = writer(content, BarcodeFormat.valueOf(barFormat.toString()), WIDTH, HEIGHT, MARGIN,
-                            charset, qrColor, backgroundColor, logoPath);
-                    boolean success = bitmap.compress(Bitmap.CompressFormat.valueOf(fileFormat.toString()), 100,
-                            output);
-                    output.flush();
-                    output.close();
+                performGenerate(content, outputPath, logoPath, fileFormat, barFormat, charset);
+            }
+        }, null);
 
+        AsynchUtil.runAsynchronously(lastTask);
+    }
+
+    private void performGenerate(final String content, final String outputPath, final String logoPath,
+            final FileFormat fileFormat, final BarFormat barFormat, final String charset) {
+        File file = new File(outputPath);
+        try {
+            FileOutputStream output = new FileOutputStream(file);
+            Bitmap bitmap = writer(content, BarcodeFormat.valueOf(barFormat.toString()), WIDTH, HEIGHT, MARGIN,
+                    charset, qrColor, backgroundColor, logoPath);
+            boolean success = bitmap.compress(Bitmap.CompressFormat.valueOf(fileFormat.toString()), 100,
+                    output);
+            output.flush();
+            output.close();
+
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
                     if (success)
-                        barGenerated(file.getPath());
+                        Generated(file.getPath());
                     else
-                        barGenerated("Unable to generate barcode.");
-                } catch (Exception e) {
+                        ErrorOccurred("Generate", "Unable to generate barcode.");
+                }
+            });
+        } catch (Exception e) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
                     ErrorOccurred("Generate", getMessage(e));
                 }
-            }
-        });
+            });
+        }
     }
 
     @SimpleFunction(description = "To decode barcode from file.")
@@ -175,15 +181,6 @@ public class QRGenerator extends AndroidNonvisibleComponent {
             public void run() {
                 File file = new File(filePath);
                 reader(file.getAbsoluteFile());
-            }
-        });
-    }
-
-    private void barGenerated(final String string) {
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Generated(string);
             }
         });
     }
@@ -201,8 +198,9 @@ public class QRGenerator extends AndroidNonvisibleComponent {
         return e.getMessage() != null ? e.getMessage() : e.toString();
     }
 
-    private Bitmap writer(String content, BarcodeFormat barFormat, int width, int height, int margin, String charset,
-            int fColor, int bgColor, String logoPath) {
+    private Bitmap writer(final String content, final BarcodeFormat barFormat, final int width, final int height,
+            final int margin, final String charset,
+            final int fColor, final int bgColor, final String logoPath) {
         try {
             Map<EncodeHintType, Object> hints = new HashMap<>();
             hints.put(EncodeHintType.CHARACTER_SET, charset);
