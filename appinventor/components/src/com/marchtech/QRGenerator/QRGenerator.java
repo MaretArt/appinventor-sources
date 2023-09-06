@@ -145,12 +145,12 @@ public class QRGenerator extends AndroidNonvisibleComponent {
 
     private void performGenerate(final String content, final String outputPath, final String logoPath,
             final FileFormat fileFormat, final BarFormat barFormat, final String charset) {
-        File file = new File(outputPath);
+        final File file = new File(outputPath);
         try {
-            FileOutputStream output = new FileOutputStream(file);
-            Bitmap bitmap = writer(content, BarcodeFormat.valueOf(barFormat.toString()), WIDTH, HEIGHT, MARGIN,
+            final FileOutputStream output = new FileOutputStream(file);
+            final Bitmap bitmap = writer(content, BarcodeFormat.valueOf(barFormat.toString()), WIDTH, HEIGHT, MARGIN,
                     charset, qrColor, backgroundColor, logoPath);
-            boolean success = bitmap.compress(Bitmap.CompressFormat.valueOf(fileFormat.toString()), 100,
+            final boolean success = bitmap.compress(Bitmap.CompressFormat.valueOf(fileFormat.toString()), 100,
                     output);
             output.flush();
             output.close();
