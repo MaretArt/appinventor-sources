@@ -42,7 +42,7 @@ import android.graphics.Matrix;
 @DesignerComponent(version = 1, description = "Extension to generate qr code.", category = ComponentCategory.EXTENSION, nonVisible = true, iconName = Icon.ICON)
 @SimpleObject(external = true)
 @UsesPermissions(permissionNames = READ_EXTERNAL_STORAGE + ", " + WRITE_EXTERNAL_STORAGE)
-@UsesLibraries(libraries = "zxing-3.5.2.jar")
+@UsesLibraries(libraries = "zxing-3.4.jar")
 public class QRGenerator extends AndroidNonvisibleComponent {
     private Activity activity;
     private SymbolShapeHint shapeHint = SymbolShapeHint.FORCE_NONE;
