@@ -131,8 +131,8 @@ public class QRGenerator extends AndroidNonvisibleComponent {
     }
 
     @SimpleFunction(description = "To generate qr code.")
-    public void Generate(String content, String outputPath, String logoPath,
-            FileFormat fileFormat, BarFormat barFormat, @Options(Charset.class) String charset) {
+    public void Generate(final String content, final String outputPath, final String logoPath,
+            final FileFormat fileFormat, final BarFormat barFormat, @Options(Charset.class) final String charset) {
         lastTask = new FutureTask<Void>(new Runnable() {
             @Override
             public void run() {
