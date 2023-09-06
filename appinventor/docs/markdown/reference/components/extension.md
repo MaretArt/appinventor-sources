@@ -745,9 +745,6 @@ Component for QRGenerator
 {:id="QRGenerator.QRColor" .color} *QRColor*
 : Set color of qr code.
 
-{:id="QRGenerator.Shape" .text .wo} *Shape*
-: Specifies barcode shape.<br> Note: Normally you wouldn't need to use this.
-
 {:id="QRGenerator.UseAdditionalDecoders" .boolean .wo} *UseAdditionalDecoders*
 : Specifies whether decoders should use additional hints.
 
