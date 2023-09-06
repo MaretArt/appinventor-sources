@@ -67,7 +67,7 @@ public class QRGenerator extends AndroidNonvisibleComponent {
 
     @SimpleEvent(description = "An event that occurrs when generated/decoded barcode failed.")
     public void ErrorOccurred(String functionName, String messages) {
-        EventDispatcher.dispatchEvent(this, "ErrorOccurred", messages);
+        EventDispatcher.dispatchEvent(this, "ErrorOccurred", functionName, messages);
     }
 
     @SimpleEvent(description = "An event that occurrs when barcode has been genarated.")
