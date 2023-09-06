@@ -194,7 +194,7 @@ public class QRGenerator extends AndroidNonvisibleComponent {
         });
     }
 
-    private String getMessage(Exception e) {
+    private static String getMessage(final Exception e) {
         return e.getMessage() != null ? e.getMessage() : e.toString();
     }
 
