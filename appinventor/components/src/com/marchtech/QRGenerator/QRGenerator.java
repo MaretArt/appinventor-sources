@@ -229,8 +229,7 @@ public class QRGenerator extends AndroidNonvisibleComponent {
             Map<EncodeHintType, Object> hints = new HashMap<>();
             hints.put(EncodeHintType.CHARACTER_SET, charset);
             hints.put(EncodeHintType.MARGIN, margin);
-            if (shapeHint != SymbolShapeHint.FORCE_NONE)
-                hints.put(EncodeHintType.DATA_MATRIX_SHAPE, shapeHint);
+            hints.put(EncodeHintType.DATA_MATRIX_SHAPE, shapeHint);
 
             MultiFormatWriter codeWriter = new MultiFormatWriter();
             BitMatrix bitMatrix = codeWriter.encode(content, barFormat, width, height, hints);
