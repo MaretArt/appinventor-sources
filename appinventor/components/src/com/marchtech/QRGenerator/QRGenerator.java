@@ -48,7 +48,6 @@ import android.graphics.Matrix;
 @UsesLibraries(libraries = "zxing-3.5.2.jar")
 public class QRGenerator extends AndroidNonvisibleComponent {
     private Activity activity;
-    private SymbolShapeHint shapeHint = SymbolShapeHint.FORCE_NONE;
 
     private boolean useAddDecoders = false;
 
@@ -87,25 +86,6 @@ public class QRGenerator extends AndroidNonvisibleComponent {
     @SimpleProperty(description = "Specifies whether decoders should use additional hints.")
     public void UseAdditionalDecoders(boolean use) {
         useAddDecoders = use;
-    }
-
-    @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_CHOICES, editorArgs = { "NONE", "RECTANGLE",
-            "SQUARE" }, defaultValue = "NONE")
-    @SimpleProperty(description = "Specifies barcode shape.<br> Note: Normally you wouldn't need to use this.")
-    public void Shape(String shape) {
-        switch (shape) {
-            case "NONE":
-                shapeHint = SymbolShapeHint.FORCE_NONE;
-                break;
-
-            case "RECTANGLE":
-                shapeHint = SymbolShapeHint.FORCE_RECTANGLE;
-                break;
-
-            case "SQUARE":
-                shapeHint = SymbolShapeHint.FORCE_SQUARE;
-                break;
-        }
     }
 
     @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_STRING, defaultValue = "QRGenerator")
@@ -229,7 +209,6 @@ public class QRGenerator extends AndroidNonvisibleComponent {
             Map<EncodeHintType, Object> hints = new HashMap<>();
             hints.put(EncodeHintType.CHARACTER_SET, charset);
             hints.put(EncodeHintType.MARGIN, margin);
-            hints.put(EncodeHintType.DATA_MATRIX_SHAPE, shapeHint);
 
             MultiFormatWriter codeWriter = new MultiFormatWriter();
             BitMatrix bitMatrix = codeWriter.encode(content, barFormat, width, height, hints);
