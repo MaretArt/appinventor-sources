@@ -736,9 +736,6 @@ Component for QRGenerator
 {:id="QRGenerator.BackgroundColor" .color} *BackgroundColor*
 : Set background color of qr code.
 
-{:id="QRGenerator.Content" .text} *Content*
-: Set text of qr code.
-
 {:id="QRGenerator.Height" .number} *Height*
 : Set height of qr code.
 
