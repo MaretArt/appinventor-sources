@@ -260,12 +260,11 @@ public class QRGenerator extends AndroidNonvisibleComponent {
     }
 
     @SimpleFunction(description = "To decode barcode from file.")
-    public void Decode(final String filePath) {
+    public void Decode(final FileScope scope, final String fileName) {
         AsynchUtil.runAsynchronously(new Runnable() {
             @Override
             public void run() {
-                File file = new File(filePath);
-                reader(file.getAbsoluteFile());
+                reader(scope, fileName);
             }
         });
     }
@@ -325,7 +324,9 @@ public class QRGenerator extends AndroidNonvisibleComponent {
         }
     }
 
-    private void reader(File file) {
+    private void reader(final FileScope scope, final String fileName) {
+        final String path = FileUtil.resolveFileName(form, fileName, scope);
+        final File file = new File(path);
         try {
             MultiFormatReader read = new MultiFormatReader();
             BufferedInputStream input = new BufferedInputStream(new FileInputStream(file));

@@ -26,7 +26,6 @@ import org.json.JSONException;
 import com.google.appinventor.components.annotations.*;
 import com.google.appinventor.components.common.*;
 import com.google.appinventor.components.runtime.*;
-import com.google.appinventor.components.runtime.collect.Lists;
 import com.google.appinventor.components.runtime.collect.Maps;
 import com.google.appinventor.components.runtime.errors.DispatchableError;
 import com.google.appinventor.components.runtime.errors.PermissionException;
@@ -44,11 +43,7 @@ import com.google.appinventor.components.runtime.util.YailList;
 import com.marchtech.Icon;
 import com.marchtech.OneSignalScheduler.helpers.Segment;
 
-@DesignerComponent( version = 1,
-                    description = "Extension to make push notification schedule with onesignal.",
-                    category = ComponentCategory.EXTENSION,
-                    nonVisible = true,
-                    iconName = Icon.ICON)
+@DesignerComponent(version = 1, description = "Extension to make push notification schedule with onesignal.", category = ComponentCategory.EXTENSION, nonVisible = true, iconName = Icon.ICON)
 @SimpleObject(external = true)
 public class OneSignalScheduler extends AndroidNonvisibleComponent {
     private static final String LOG_TAG = "OneSignalScheduler";
@@ -56,7 +51,7 @@ public class OneSignalScheduler extends AndroidNonvisibleComponent {
     private final Activity activity;
     private final CookieHandler cookieHandler;
 
-    //private YailList requestHeaders = new YailList();
+    // private YailList requestHeaders = new YailList();
     private YailList columns = new YailList();
 
     private FutureTask<Void> lastTask = null;
@@ -64,16 +59,12 @@ public class OneSignalScheduler extends AndroidNonvisibleComponent {
     private String url = "https://onesignal.com/api/v1/notifications";
     private String restApiKey = "";
     private String appId = "";
-    private String msg = "";
-    private String title = "";
-    private String dateTime = "";
     private String id = "";
     private String mode = "create";
 
     private int priority = 0;
 
     private Map<String, List<String>> requestHeadersMap = Maps.newHashMap();
-    private Map<String, String> scheduleData = new HashMap<>();
 
     public OneSignalScheduler(ComponentContainer container) {
         super(container.$form());
@@ -106,37 +97,41 @@ public class OneSignalScheduler extends AndroidNonvisibleComponent {
             this.index = index;
         }
     }
-/*
-    private static Map<String, List<String>> processRequestHeaders(YailList list) throws InvalidRequestHeadersException {
-        Map<String, List<String>> requestHeadersMap = Maps.newHashMap();
-        for (int i = 0; i < list.size(); i++) {
-            Object item = list.getObject(i);
-            if (item instanceof YailList) {
-                YailList sublist = (YailList) item;
-                if (sublist.size() == 2) {
-                    String fieldName = sublist.getObject(0).toString();
-                    Object fieldValues = sublist.getObject(1);
-                    String key = fieldName;
-                    List<String> values = Lists.newArrayList();
-                    if (fieldValues instanceof YailList) {
-                        YailList multipleFieldsValues = (YailList) fieldValues;
-                        for (int j = 0; j < multipleFieldsValues.size(); j++) {
-                            Object value = multipleFieldsValues.getObject(j);
-                            values.add(value.toString());
-                        }
-                    } else {
-                        Object singleFieldValue = fieldValues;
-                        values.add(singleFieldValue.toString());
-                    }
 
-                    requestHeadersMap.put(key, values);
-                } else throw new InvalidRequestHeadersException(ErrorMessages.ERROR_WEB_REQUEST_HEADER_NOT_TWO_ELEMENTS, i + 1);
-            } else throw new InvalidRequestHeadersException(ErrorMessages.ERROR_WEB_REQUEST_HEADER_NOT_LIST, i + 1);
-        }
-
-        return requestHeadersMap;
-    }
-*/
+    /*
+     * private static Map<String, List<String>> processRequestHeaders(YailList list)
+     * throws InvalidRequestHeadersException {
+     * Map<String, List<String>> requestHeadersMap = Maps.newHashMap();
+     * for (int i = 0; i < list.size(); i++) {
+     * Object item = list.getObject(i);
+     * if (item instanceof YailList) {
+     * YailList sublist = (YailList) item;
+     * if (sublist.size() == 2) {
+     * String fieldName = sublist.getObject(0).toString();
+     * Object fieldValues = sublist.getObject(1);
+     * String key = fieldName;
+     * List<String> values = Lists.newArrayList();
+     * if (fieldValues instanceof YailList) {
+     * YailList multipleFieldsValues = (YailList) fieldValues;
+     * for (int j = 0; j < multipleFieldsValues.size(); j++) {
+     * Object value = multipleFieldsValues.getObject(j);
+     * values.add(value.toString());
+     * }
+     * } else {
+     * Object singleFieldValue = fieldValues;
+     * values.add(singleFieldValue.toString());
+     * }
+     * 
+     * requestHeadersMap.put(key, values);
+     * } else throw new InvalidRequestHeadersException(ErrorMessages.
+     * ERROR_WEB_REQUEST_HEADER_NOT_TWO_ELEMENTS, i + 1);
+     * } else throw new InvalidRequestHeadersException(ErrorMessages.
+     * ERROR_WEB_REQUEST_HEADER_NOT_LIST, i + 1);
+     * }
+     * 
+     * return requestHeadersMap;
+     * }
+     */
     private static class CapturedProperties {
         final String urlString;
         final URL url;
@@ -171,12 +166,14 @@ public class OneSignalScheduler extends AndroidNonvisibleComponent {
         }
     }
 
-    private static HttpURLConnection openConnection(CapturedProperties webProps, String httpVerb) throws IOException, ClassCastException, ProtocolException {
+    private static HttpURLConnection openConnection(CapturedProperties webProps, String httpVerb)
+            throws IOException, ClassCastException, ProtocolException {
         HttpURLConnection connection = (HttpURLConnection) webProps.url.openConnection();
         connection.setConnectTimeout(webProps.timeout);
         connection.setReadTimeout(webProps.timeout);
 
-        if (httpVerb.equals("DELETE")) connection.setRequestMethod(httpVerb);
+        if (httpVerb.equals("DELETE"))
+            connection.setRequestMethod(httpVerb);
 
         for (Map.Entry<String, List<String>> header : webProps.requestHeaders.entrySet()) {
             String name = header.getKey();
@@ -251,7 +248,8 @@ public class OneSignalScheduler extends AndroidNonvisibleComponent {
 
     private static String getResponseContent(HttpURLConnection connection) throws IOException {
         String encoding = connection.getContentEncoding();
-        if (encoding == null) encoding = "UTF-8";
+        if (encoding == null)
+            encoding = "UTF-8";
 
         InputStreamReader reader = new InputStreamReader(getConnectionStream(connection), encoding);
         try {
@@ -259,7 +257,8 @@ public class OneSignalScheduler extends AndroidNonvisibleComponent {
             StringBuilder sb = (contentLength != -1) ? new StringBuilder(contentLength) : new StringBuilder();
             char[] buf = new char[1024];
             int read;
-            while ((read = reader.read(buf)) != -1) sb.append(buf, 0, read);
+            while ((read = reader.read(buf)) != -1)
+                sb.append(buf, 0, read);
 
             return sb.toString();
         } finally {
@@ -284,7 +283,8 @@ public class OneSignalScheduler extends AndroidNonvisibleComponent {
         }
     }
 
-    private void performRequest(final CapturedProperties webProps, final byte[] postData, final String httpVerb, final String method) {
+    private void performRequest(final CapturedProperties webProps, final byte[] postData, final String httpVerb,
+            final String method) {
         try {
             HttpURLConnection connection = openConnection(webProps, httpVerb);
             if (connection != null) {
@@ -303,10 +303,12 @@ public class OneSignalScheduler extends AndroidNonvisibleComponent {
                         @Override
                         public void run() {
                             if (responseCode == 200) {
-                                if (mode == "CREATE") onCreated(id, getId(responseContent));
-                                else onDeleted(id);
-                            }
-                            else onFailed(mode, id, responseContent);
+                                if (mode == "CREATE")
+                                    onCreated(id, getId(responseContent));
+                                else
+                                    onDeleted(id);
+                            } else
+                                onFailed(mode, id, responseContent);
                         }
                     });
 
@@ -329,7 +331,8 @@ public class OneSignalScheduler extends AndroidNonvisibleComponent {
         } catch (DispatchableError e) {
             form.dispatchErrorOccurredEvent(OneSignalScheduler.this, method, e.getErrorCode(), e.getArguments());
         } catch (RequestTimeoutException e) {
-            form.dispatchErrorOccurredEvent(OneSignalScheduler.this, method, ErrorMessages.ERROR_WEB_REQUEST_TIMED_OUT, webProps.urlString);
+            form.dispatchErrorOccurredEvent(OneSignalScheduler.this, method, ErrorMessages.ERROR_WEB_REQUEST_TIMED_OUT,
+                    webProps.urlString);
         } catch (Exception e) {
             int message;
             String[] args;
@@ -340,7 +343,8 @@ public class OneSignalScheduler extends AndroidNonvisibleComponent {
                 message = ErrorMessages.ERROR_WEB_UNABLE_TO_MODIFY_RESOURCE;
                 String content = "";
                 try {
-                    if (postData != null) content = new String(postData, "UTF-8");
+                    if (postData != null)
+                        content = new String(postData, "UTF-8");
                 } catch (UnsupportedEncodingException el) {
                     Log.e(LOG_TAG, "UTF-8 is the default charset for Android but not available???");
                 }
@@ -352,23 +356,28 @@ public class OneSignalScheduler extends AndroidNonvisibleComponent {
         }
     }
 
-    private void requestTextImpl(final String text, final String encoding, final String functionName, final String httpVerb) {
+    private void requestTextImpl(final String text, final String encoding, final String functionName,
+            final String httpVerb) {
         final CapturedProperties webProps = capturePropertyValues(functionName);
-        if (webProps == null) return;
+        if (webProps == null)
+            return;
 
         lastTask = new FutureTask<Void>(new Runnable() {
             @Override
             public void run() {
                 byte[] requestData;
                 try {
-                    if (encoding == null || encoding.length() == 0) requestData = text.getBytes("UTF-8");
-                    else requestData = text.getBytes(encoding);
+                    if (encoding == null || encoding.length() == 0)
+                        requestData = text.getBytes("UTF-8");
+                    else
+                        requestData = text.getBytes(encoding);
                 } catch (UnsupportedEncodingException e) {
-                    form.dispatchErrorOccurredEvent(OneSignalScheduler.this, functionName, ErrorMessages.ERROR_WEB_UNSUPPORTED_ENCODING, encoding, null);
+                    form.dispatchErrorOccurredEvent(OneSignalScheduler.this, functionName,
+                            ErrorMessages.ERROR_WEB_UNSUPPORTED_ENCODING, encoding, null);
                     return;
                 }
 
-                performRequest(webProps, requestData, httpVerb , functionName);
+                performRequest(webProps, requestData, httpVerb, functionName);
             }
         }, null);
 
@@ -429,27 +438,66 @@ public class OneSignalScheduler extends AndroidNonvisibleComponent {
     }
 
     @SimpleFunction(description = "To create schedule of onesignal push notifications.")
-    public void CreateSchedule(String id, @Options(Segment.class) String segment, YailDictionary messages, YailDictionary title, String dateTime, String timezone, YailDictionary data) {
+    public void CreateSchedule(String id, @Options(Segment.class) String segment, YailDictionary messages,
+            YailDictionary title, String dateTime, String timezone, YailDictionary data) {
         mode = "CREATE";
         url = "https://onesignal.com/api/v1/notifications";
 
         String jsonString = "{" +
-                                "\"app_id\":\"" + appId + "\","                             +
-                                "\"included_segments\": ["                                  +
-                                    "\"" + segment + "\""                                   +
-                                "],"                                                        +
-                                "\"contents\": "                                            +
-                                    messages                                                +
-                                ","                                                         +
-                                "\"send_after\":\"" + dateTime + " " + timezone + "\","     +
-                                "\"headings\": "                                            +
-                                    title                                                   +
-                                ","                                                         +
-                                "\"data\": "                                                +
-                                    data                                                    +
-                                ","                                                         +
-                                "\"priority\":\"" + String.valueOf(priority) + "\""         +
-                            "}";
+                "\"app_id\":\"" + appId + "\"," +
+                "\"included_segments\": [" +
+                "\"" + segment + "\"" +
+                "]," +
+                "\"contents\": " +
+                messages +
+                "," +
+                "\"send_after\":\"" + dateTime + " " + timezone + "\"," +
+                "\"headings\": " +
+                title +
+                "," +
+                "\"data\": " +
+                data +
+                "," +
+                "\"priority\":\"" + String.valueOf(priority) + "\"" +
+                "}";
+
+        List<String> list1 = new ArrayList<>();
+        list1.add("application/json");
+
+        List<String> list2 = new ArrayList<>();
+        list2.add("Basic " + restApiKey);
+
+        requestHeadersMap = Maps.newHashMap();
+        requestHeadersMap.put("content-type", list1);
+        requestHeadersMap.put("Authorization", list2);
+
+        this.id = id;
+        requestTextImpl(jsonString, "UTF-8", "CreateSchedule", "POST");
+    }
+
+    @SimpleFunction(description = "To create schedule of onesignal push notifications with subscription ids.")
+    public void CreateScheduleToIds(String id, YailList subscriptionIds, YailDictionary messages, YailDictionary title,
+            String dateTime, String timezone, YailDictionary data) {
+        mode = "CREATE";
+        url = "https://onesignal.com/api/v1/notifications";
+
+        String jsonString = "{" +
+                "\"app_id\":\"" + appId + "\"," +
+                "\"include_subscription_ids\": " +
+                subscriptionIds.toJSONString() +
+                "," +
+                "\"contents\": " +
+                messages +
+                "," +
+                "\"send_after\":\"" + dateTime + " " + timezone + "\"," +
+                "\"headings\": " +
+                title +
+                "," +
+                "\"data\": " +
+                data +
+                "," +
+                "\"priority\":\"" + String.valueOf(priority) + "\"" +
+                "}";
 
         List<String> list1 = new ArrayList<>();
         list1.add("application/json");
@@ -473,7 +521,8 @@ public class OneSignalScheduler extends AndroidNonvisibleComponent {
 
         final String METHOD = "Delete";
         final CapturedProperties webProps = capturePropertyValues(METHOD);
-        if (webProps == null) return;
+        if (webProps == null)
+            return;
 
         lastTask = new FutureTask<Void>(new Runnable() {
             @Override

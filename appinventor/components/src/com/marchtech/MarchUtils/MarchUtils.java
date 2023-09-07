@@ -38,6 +38,16 @@ public class MarchUtils extends AndroidNonvisibleComponent {
 
     private FutureTask<Void> lastTask = null;
 
+    private final int SAME_BEFORE = -3;
+    private final int SAME_AFTER = 3;
+    private final int BEFORE_SAME = -4;
+    private final int AFTER_SAME = 4;
+    private final int SAME = 0;
+    private final int BEFORE_AFTER = -1;
+    private final int AFTER_BEFORE = 1;
+    private final int BEFORE = -2;
+    private final int AFTER = 2;
+
     public MarchUtils(ComponentContainer container) {
         super(container.$form());
         activity = container.$context();
@@ -186,29 +196,31 @@ public class MarchUtils extends AndroidNonvisibleComponent {
             }
         } else if (sortType == Sort.BeforeToday) {
             int numAfter = 0;
-            for (int i = 0; i < result.size() - 1; i++) {
-                int day1 = getPattern(dateList.get(i).toString(), pattern, 'd');
-                int month1 = getPattern(dateList.get(i).toString(), pattern, 'M');
-                int year1 = getPattern(dateList.get(i).toString(), pattern, 'y');
-                Calendar date1 = Dates.DateInstant(year1, month1, day1);
+            int len = result.size();
+            for (int counter = 0; counter < result.size() - 1; counter++) {
+                len--;
+                for (int i = 0; i < result.size() - 1; i++) {
+                    int day1 = getPattern(dateList.get(i).toString(), pattern, 'd');
+                    int month1 = getPattern(dateList.get(i).toString(), pattern, 'M');
+                    int year1 = getPattern(dateList.get(i).toString(), pattern, 'y');
+                    Calendar date1 = Dates.DateInstant(year1, month1, day1);
 
-                int day2 = getPattern(dateList.get(i + 1).toString(), pattern, 'd');
-                int month2 = getPattern(dateList.get(i + 1).toString(), pattern, 'M');
-                int year2 = getPattern(dateList.get(i + 1).toString(), pattern, 'y');
-                Calendar date2 = Dates.DateInstant(year2, month2, day2);
+                    int day2 = getPattern(dateList.get(i + 1).toString(), pattern, 'd');
+                    int month2 = getPattern(dateList.get(i + 1).toString(), pattern, 'M');
+                    int year2 = getPattern(dateList.get(i + 1).toString(), pattern, 'y');
+                    Calendar date2 = Dates.DateInstant(year2, month2, day2);
 
-                if (compareBeforeToday(date1, date2) < 0) {
-                    Object lastDate = dateList.get(i);
-                    Object lastResult = result.get(i);
-                    dateList.set(i, dateList.get(i + 1));
-                    dateList.set(i + 1, lastDate);
-                    result.set(i, result.get(i + 1));
-                    result.set(i + 1, lastResult);
-                    numAfter++;
+                    if (compareBefore(date1, date2) < 0) {
+                        Object lastDate = dateList.get(i);
+                        Object lastResult = result.get(i);
+                        dateList.set(i, dateList.get(i + 1));
+                        dateList.set(i + 1, lastDate);
+                        result.set(i, result.get(i + 1));
+                        result.set(i + 1, lastResult);
+                    }
                 }
             }
 
-            int len = result.size() - numAfter;
             for (int counter = 0; counter < len - 1; counter++) {
                 len--;
                 for (int i = 0; i < len; i++) {
@@ -525,22 +537,7 @@ public class MarchUtils extends AndroidNonvisibleComponent {
         return 0;
     }
 
-    private int compareBeforeToday(Calendar date1, Calendar date2) {
-        Calendar today = Dates.Now();
-        try {
-            today.set(Calendar.HOUR_OF_DAY, 12);
-            date1.set(Calendar.HOUR_OF_DAY, 12);
-            date2.set(Calendar.HOUR_OF_DAY, 12);
-            today.set(Calendar.MINUTE, 0);
-            date1.set(Calendar.MINUTE, 0);
-            date2.set(Calendar.MINUTE, 0);
-            today.set(Calendar.SECOND, 0);
-            date1.set(Calendar.SECOND, 0);
-            date2.set(Calendar.SECOND, 0);
-        } catch (IllegalArgumentException e) {
-            form.dispatchErrorOccurredEvent(this, "SortByDate", ErrorMessages.ERROR_ILLEGAL_DATE);
-        }
-
+    private int compareBefore(Calendar date1, Calendar date2) {
         int day = Dates.Day(Dates.Now());
         int day1 = Dates.Day(date1);
         int day2 = Dates.Day(date2);
@@ -551,18 +548,89 @@ public class MarchUtils extends AndroidNonvisibleComponent {
         int year1 = Dates.Month(date1);
         int year2 = Dates.Month(date2);
 
-        if ((year1 - year) >= 0 && (year2 - year) < 0)
-            return -1;
-        else if ((year1 - year) < 0 && (year2 - year) < 0) {
-            if ((month1 - month) >= 0 && (month2 - month) < 0)
-                return -1;
-            else if ((month1 - month) < 0 && (month2 - month) < 0) {
-                if ((day1 - day) >= 0 && (day2 - day) < 0)
-                    return -1;
-                else if ((day1 - day) < 0 && (day2 - day) < 0)
-                    return 0;
-            }
-        }
+        if ((year1 - year) - (year2 - year) < 0)
+            return 1;
+
+        return 1;
+    }
+
+    private int compareYear(Calendar date1, Calendar date2) {
+        int year = Dates.Month(Dates.Now());
+        int year1 = Dates.Month(date1);
+        int year2 = Dates.Month(date2);
+
+        if ((year1 - year) == 0 && (year2 - year) == 0)
+            return SAME;
+        else if ((year1 - year) < 0 && (year2 - year) < 0)
+            return BEFORE;
+        else if ((year1 - year) > 0 && (year2 - year) > 0)
+            return AFTER;
+        else if ((year1 - year) < 0 && (year2 - year) > 0)
+            return BEFORE_AFTER;
+        else if ((year1 - year) > 0 && (year2 - year) < 0)
+            return AFTER_BEFORE;
+        else if ((year1 - year) == 0 && (year2 - year) < 0)
+            return SAME_BEFORE;
+        else if ((year1 - year) == 0 && (year2 - year) > 0)
+            return SAME_AFTER;
+        else if ((year1 - year) < 0 && (year2 - year) == 0)
+            return BEFORE_SAME;
+        else if ((year1 - year) > 0 && (year2 - year) == 0)
+            return AFTER_SAME;
+
+        return SAME;
+    }
+
+    private int compareMonth(Calendar date1, Calendar date2) {
+        int month = Dates.Month(Dates.Now()) - 1;
+        int month1 = Dates.Month(date1);
+        int month2 = Dates.Month(date2);
+
+        if ((month1 - month) == 0 && (month2 - month) == 0)
+            return SAME;
+        else if ((month1 - month) < 0 && (month2 - month) < 0)
+            return BEFORE;
+        else if ((month1 - month) > 0 && (month2 - month) > 0)
+            return AFTER;
+        else if ((month1 - month) < 0 && (month2 - month) > 0)
+            return BEFORE_AFTER;
+        else if ((month1 - month) > 0 && (month2 - month) < 0)
+            return AFTER_BEFORE;
+        else if ((month1 - month) == 0 && (month2 - month) < 0)
+            return SAME_BEFORE;
+        else if ((month1 - month) == 0 && (month2 - month) > 0)
+            return SAME_AFTER;
+        else if ((month1 - month) < 0 && (month2 - month) == 0)
+            return BEFORE_SAME;
+        else if ((month1 - month) > 0 && (month2 - month) == 0)
+            return AFTER_SAME;
+
+        return 1;
+    }
+
+    private int compareDay(Calendar date1, Calendar date2) {
+        int day = Dates.Day(Dates.Now());
+        int day1 = Dates.Day(date1);
+        int day2 = Dates.Day(date2);
+
+        if ((day1 - day) == 0 && (day2 - day) == 0)
+            return SAME;
+        else if ((day1 - day) < 0 && (day2 - day) < 0)
+            return BEFORE;
+        else if ((day1 - day) > 0 && (day2 - day) > 0)
+            return AFTER;
+        else if ((day1 - day) < 0 && (day2 - day) > 0)
+            return BEFORE_AFTER;
+        else if ((day1 - day) > 0 && (day2 - day) < 0)
+            return AFTER_BEFORE;
+        else if ((day1 - day) == 0 && (day2 - day) < 0)
+            return SAME_BEFORE;
+        else if ((day1 - day) == 0 && (day2 - day) > 0)
+            return SAME_AFTER;
+        else if ((day1 - day) < 0 && (day2 - day) == 0)
+            return BEFORE_SAME;
+        else if ((day1 - day) > 0 && (day2 - day) == 0)
+            return AFTER_SAME;
 
         return 1;
     }
