@@ -162,15 +162,16 @@ public class QRGenerator extends AndroidNonvisibleComponent {
     }
 
     @SimpleFunction(description = "To generate qr code on image component without save it.")
-    public void GenerateOnImage(final Image image, final String content, final FileScope scope, final String logoPath,
-            final FileFormat fileFormat, final BarFormat barFormat, @Options(Charset.class) final String charset) {
-        this.image = image;
+    public void GenerateOnImage(final Image imageComponent, final String content, final FileScope logoScope,
+            final String logoPath, final BarFormat barFormat, @Options(Charset.class) final String charset) {
+        image = imageComponent;
         final String METHOD = "JUST_GENERATE";
         lastTask = new FutureTask<>(new Runnable() {
             @Override
             public void run() {
-                performGenerate(content, FileScope.Cache, "QRGenerator." + fileFormat.toString().toLowerCase(), scope,
-                        logoPath, fileFormat, barFormat, charset, METHOD);
+                performGenerate(content, FileScope.Cache, "QRGenerator.png",
+                        logoScope,
+                        logoPath, FileFormat.PNG, barFormat, charset, METHOD);
             }
         }, null);
 
@@ -236,7 +237,7 @@ public class QRGenerator extends AndroidNonvisibleComponent {
                         if (method.equals("SAVE_GENERATE"))
                             Generated(output);
                         else if (method.equals("JUST_GENERATE")) {
-                            image.Picture(output);
+                            image.Picture("file://" + file.getPath());
                             GeneratedOnImage();
                         }
                     } else
