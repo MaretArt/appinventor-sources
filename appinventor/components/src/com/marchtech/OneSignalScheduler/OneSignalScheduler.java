@@ -475,11 +475,17 @@ public class OneSignalScheduler extends AndroidNonvisibleComponent {
         requestTextImpl(jsonString, "UTF-8", "CreateSchedule", "POST");
     }
 
+    @SimpleEvent
+    public void test(String value) {
+        EventDispatcher.dispatchEvent(this, "this", value);
+    }
+
     @SimpleFunction(description = "To create schedule of onesignal push notifications with player ids.")
     public void CreateScheduleToIds(String id, YailList subscriptionIds, YailDictionary messages, YailDictionary title,
             String dateTime, String timezone, YailDictionary data) {
         mode = "CREATE";
         url = "https://onesignal.com/api/v1/notifications";
+        test(subscriptionIds.toJSONString());
 
         String jsonString = "{" +
                 "\"app_id\":\"" + appId + "\"," +

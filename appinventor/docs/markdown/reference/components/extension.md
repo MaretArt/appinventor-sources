@@ -717,6 +717,9 @@ Component for OneSignalScheduler
 {:id="OneSignalScheduler.onTimedOut"} onTimedOut(*response*{:.text},*id*{:.text})
 : Occurs when has timedout.
 
+{:id="OneSignalScheduler.test"} test(*value*{:.text})
+: Event for test
+
 ### Methods  {#OneSignalScheduler-Methods}
 
 {:.methods}
