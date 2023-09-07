@@ -208,7 +208,7 @@ public class QRGenerator extends AndroidNonvisibleComponent {
                         ErrorOccurred("Generate", "Unable to generate barcode.");
                 }
             });
-        } catch (Exception e) {
+        } catch (final Exception e) {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
