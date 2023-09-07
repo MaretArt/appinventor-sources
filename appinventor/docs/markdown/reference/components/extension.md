@@ -765,6 +765,9 @@ Component for QRGenerator
 {:id="QRGenerator.Generated"} Generated(*filePath*{:.text})
 : An event that occurrs when barcode has been genarated.
 
+{:id="QRGenerator.GeneratedOnImage"} GeneratedOnImage()
+: An event that occurrs when barcode has been genarated on image component.
+
 ### Methods  {#QRGenerator-Methods}
 
 {:.methods}
@@ -772,8 +775,11 @@ Component for QRGenerator
 {:id="QRGenerator.Decode" class="method"} <i/> Decode(*filePath*{:.text})
 : To decode barcode from file.
 
-{:id="QRGenerator.Generate" class="method"} <i/> Generate(*content*{:.text},*scope*{:.com.google.appinventor.components.common.FileScopeEnum},*fileName*{:.text},*logoPath*{:.text},*fileFormat*{:.com.marchtech.QRGenerator.helpers.FileFormatEnum},*barFormat*{:.com.marchtech.QRGenerator.helpers.BarFormatEnum},*charset*{:.text})
+{:id="QRGenerator.Generate" class="method"} <i/> Generate(*content*{:.text},*scope*{:.com.google.appinventor.components.common.FileScopeEnum},*fileName*{:.text},*logoScope*{:.com.google.appinventor.components.common.FileScopeEnum},*logoPath*{:.text},*fileFormat*{:.com.marchtech.QRGenerator.helpers.FileFormatEnum},*barFormat*{:.com.marchtech.QRGenerator.helpers.BarFormatEnum},*charset*{:.text})
 : To generate qr code.
+
+{:id="QRGenerator.GenerateOnImage" class="method"} <i/> GenerateOnImage(*image*{:.component},*content*{:.text},*scope*{:.com.google.appinventor.components.common.FileScopeEnum},*logoPath*{:.text},*fileFormat*{:.com.marchtech.QRGenerator.helpers.FileFormatEnum},*barFormat*{:.com.marchtech.QRGenerator.helpers.BarFormatEnum},*charset*{:.text})
+: To generate qr code on image component without save it.
 
 ## SimpleBluetooth  {#SimpleBluetooth}
 
