@@ -53,7 +53,6 @@ public class QRGenerator extends AndroidNonvisibleComponent {
     private FutureTask<Void> lastTask = null;
 
     private boolean useAddDecoders = false;
-    private boolean save;
 
     private boolean haveReadPermission = false;
     private boolean haveWritePermission = false;
@@ -63,6 +62,8 @@ public class QRGenerator extends AndroidNonvisibleComponent {
     private int MARGIN = 0;
     private int backgroundColor;
     private int qrColor;
+
+    private Image image = null;
 
     public QRGenerator(ComponentContainer container) {
         super(container.$form());
@@ -80,6 +81,11 @@ public class QRGenerator extends AndroidNonvisibleComponent {
     @SimpleEvent(description = "An event that occurrs when barcode has been genarated.")
     public void Generated(String filePath) {
         EventDispatcher.dispatchEvent(this, "Generated", filePath);
+    }
+
+    @SimpleEvent(description = "An event that occurrs when barcode has been genarated on image component.")
+    public void GeneratedOnImage() {
+        EventDispatcher.dispatchEvent(this, "GeneratedOnImage");
     }
 
     @SimpleEvent(description = "An event that occurrs when barcode has been decoded.")
@@ -138,15 +144,33 @@ public class QRGenerator extends AndroidNonvisibleComponent {
     }
 
     @SimpleFunction(description = "To generate qr code.")
-    public void Generate(final String content, final FileScope scope, final String fileName, final String logoPath,
+    public void Generate(final String content, final FileScope scope, final String fileName, final FileScope logoScope,
+            final String logoPath,
             final FileFormat fileFormat, final BarFormat barFormat, @Options(Charset.class) final String charset) {
+        final String MEHTOD = "SAVE_GENERATE";
         if (scope == FileScope.Asset)
             ErrorOccurred("Generate", "Can't generate into asset.");
-        save = true;
+
         lastTask = new FutureTask<Void>(new Runnable() {
             @Override
             public void run() {
-                performGenerate(content, scope, fileName, logoPath, fileFormat, barFormat, charset);
+                performGenerate(content, scope, fileName, logoScope, logoPath, fileFormat, barFormat, charset, MEHTOD);
+            }
+        }, null);
+
+        AsynchUtil.runAsynchronously(lastTask);
+    }
+
+    @SimpleFunction(description = "To generate qr code on image component without save it.")
+    public void GenerateOnImage(final Image image, final String content, final FileScope scope, final String logoPath,
+            final FileFormat fileFormat, final BarFormat barFormat, @Options(Charset.class) final String charset) {
+        this.image = image;
+        final String METHOD = "JUST_GENERATE";
+        lastTask = new FutureTask<>(new Runnable() {
+            @Override
+            public void run() {
+                performGenerate(content, FileScope.Cache, "QRGenerator." + fileFormat.toString().toLowerCase(), scope,
+                        logoPath, fileFormat, barFormat, charset, METHOD);
             }
         }, null);
 
@@ -154,15 +178,13 @@ public class QRGenerator extends AndroidNonvisibleComponent {
     }
 
     private void performGenerate(final String content, final FileScope scope, final String fileName,
-            final String logoPath,
-            final FileFormat fileFormat, final BarFormat barFormat, final String charset) {
+            final FileScope logoScope, final String logoPath,
+            final FileFormat fileFormat, final BarFormat barFormat, final String charset, final String method) {
         final List<String> neededPermissions = new ArrayList<>();
-        final String outputPath;
-        if (save)
-            outputPath = FileUtil.resolveFileName(form, fileName, scope);
-        else
-            outputPath = FileUtil.resolveFileName(form, "QRGenerator", FileScope.Cache);
+        if (!logoPath.isEmpty() && FileUtil.needsReadPermission(form, logoPath) && !haveReadPermission)
+            neededPermissions.add(READ_EXTERNAL_STORAGE);
 
+        final String outputPath = FileUtil.resolveFileName(form, fileName, scope);
         if (FileUtil.needsWritePermission(form, outputPath) && !haveWritePermission)
             neededPermissions.add(WRITE_EXTERNAL_STORAGE);
 
@@ -179,7 +201,8 @@ public class QRGenerator extends AndroidNonvisibleComponent {
                     AsynchUtil.runAsynchronously(new Runnable() {
                         @Override
                         public void run() {
-                            me.performGenerate(content, scope, fileName, logoPath, fileFormat, barFormat, charset);
+                            me.performGenerate(content, scope, fileName, logoScope, logoPath, fileFormat, barFormat,
+                                    charset, method);
                         }
                     });
                 }
@@ -188,12 +211,13 @@ public class QRGenerator extends AndroidNonvisibleComponent {
             return;
         }
 
+        final String logo = FileUtil.resolveFileName(form, logoPath, logoScope).replaceAll("file://", "");
         final String path = outputPath.replaceAll("file://", "");
         final File file = new File(path);
         try {
             final FileOutputStream output = new FileOutputStream(file);
             final Bitmap bitmap = writer(content, BarcodeFormat.valueOf(barFormat.toString()), WIDTH, HEIGHT, MARGIN,
-                    charset, qrColor, backgroundColor, logoPath);
+                    charset, qrColor, backgroundColor, logo);
             final boolean success = bitmap.compress(Bitmap.CompressFormat.valueOf(fileFormat.toString()), 100,
                     output);
             output.flush();
@@ -208,7 +232,13 @@ public class QRGenerator extends AndroidNonvisibleComponent {
                             output = "file://" + file.getPath();
                         else
                             output = file.getPath();
-                        Generated(output);
+
+                        if (method.equals("SAVE_GENERATE"))
+                            Generated(output);
+                        else if (method.equals("JUST_GENERATE")) {
+                            image.Picture(output);
+                            GeneratedOnImage();
+                        }
                     } else
                         ErrorOccurred("Generate", "Unable to generate barcode.");
                 }
