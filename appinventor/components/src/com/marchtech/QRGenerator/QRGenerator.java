@@ -155,10 +155,6 @@ public class QRGenerator extends AndroidNonvisibleComponent {
             final String logoPath,
             final FileFormat fileFormat, final BarFormat barFormat, final String charset) {
         final List<String> neededPermissions = new ArrayList<>();
-        if (fileName != null && FileUtil.needsReadPermission(form, fileName) && !haveReadPermission) {
-            neededPermissions.add(READ_EXTERNAL_STORAGE);
-        }
-
         final String outputPath;
         if (save) {
             outputPath = FileUtil.resolveFileName(form, fileName, scope);
