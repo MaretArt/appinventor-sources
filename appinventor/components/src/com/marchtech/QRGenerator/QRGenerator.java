@@ -140,6 +140,8 @@ public class QRGenerator extends AndroidNonvisibleComponent {
     @SimpleFunction(description = "To generate qr code.")
     public void Generate(final String content, final FileScope scope, final String fileName, final String logoPath,
             final FileFormat fileFormat, final BarFormat barFormat, @Options(Charset.class) final String charset) {
+        if (scope == FileScope.Asset)
+            ErrorOccurred("Generate", "Can't generate into asset.");
         save = true;
         lastTask = new FutureTask<Void>(new Runnable() {
             @Override
@@ -200,9 +202,12 @@ public class QRGenerator extends AndroidNonvisibleComponent {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (success)
-                        Generated(file.getPath());
-                    else
+                    if (success) {
+                        String output = file.getPath();
+                        if (scope != FileScope.App)
+                            output = "file://" + output;
+                        Generated(output);
+                    } else
                         ErrorOccurred("Generate", "Unable to generate barcode.");
                 }
             });
