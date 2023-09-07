@@ -1,5 +1,6 @@
 package com.marchtech.MarchUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -23,11 +24,18 @@ import com.google.appinventor.components.runtime.util.YailList;
 import com.marchtech.Icon;
 import com.marchtech.MarchUtils.helpers.Sort;
 
+import android.content.Context;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
+
 @DesignerComponent(version = 1, description = "Extension to help you.", category = ComponentCategory.EXTENSION, nonVisible = true, iconName = Icon.ICON)
 @SimpleObject(external = true)
 public class MarchUtils extends AndroidNonvisibleComponent {
+    private final Context context;
+
     public MarchUtils(ComponentContainer container) {
         super(container.$form());
+        context = container.$context();
     }
 
     @SimpleFunction(description = "For using map function.")
@@ -358,6 +366,22 @@ public class MarchUtils extends AndroidNonvisibleComponent {
         }
 
         return "It's not a JSON";
+    }
+
+    @SimpleEvent(description = "An Event that occurrs when gallery has been refreshed.")
+    public void GalleryRefreshed(String filePath) {
+        EventDispatcher.dispatchEvent(this, "GalleryRefreshed", filePath);
+    }
+
+    @SimpleFunction(description = "To Refresh gallery with specific file path.")
+    public void RefreshGallery(String filePath) {
+        java.io.File file = new File(filePath);
+        MediaScannerConnection.scanFile(context, new String[] { file.toString() }, null,
+                new MediaScannerConnection.OnScanCompletedListener() {
+                    public void onScanCompleted(String path, Uri uri) {
+                        GalleryRefreshed(filePath);
+                    }
+                });
     }
 
     private Map<Object, Object> toMap(JSONObject json) throws JSONException {
