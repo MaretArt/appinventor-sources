@@ -476,8 +476,8 @@ public class OneSignalScheduler extends AndroidNonvisibleComponent {
     }
 
     @SimpleEvent
-    public void test(String value) {
-        EventDispatcher.dispatchEvent(this, "this", value);
+    public void Test(String value) {
+        EventDispatcher.dispatchEvent(this, "Test", value);
     }
 
     @SimpleFunction(description = "To create schedule of onesignal push notifications with player ids.")
@@ -485,7 +485,7 @@ public class OneSignalScheduler extends AndroidNonvisibleComponent {
             String dateTime, String timezone, YailDictionary data) {
         mode = "CREATE";
         url = "https://onesignal.com/api/v1/notifications";
-        test(subscriptionIds.toJSONString());
+        Test(subscriptionIds.toJSONString());
 
         String jsonString = "{" +
                 "\"app_id\":\"" + appId + "\"," +

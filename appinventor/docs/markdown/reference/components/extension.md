@@ -705,6 +705,9 @@ Component for OneSignalScheduler
 
 {:.events}
 
+{:id="OneSignalScheduler.Test"} Test(*value*{:.text})
+: Event for Test
+
 {:id="OneSignalScheduler.onCreated"} onCreated(*id*{:.text},*notificationId*{:.text})
 : Occurs when notification has been scheduled.
 
@@ -716,9 +719,6 @@ Component for OneSignalScheduler
 
 {:id="OneSignalScheduler.onTimedOut"} onTimedOut(*response*{:.text},*id*{:.text})
 : Occurs when has timedout.
-
-{:id="OneSignalScheduler.test"} test(*value*{:.text})
-: Event for test
 
 ### Methods  {#OneSignalScheduler-Methods}
 
