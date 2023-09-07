@@ -203,9 +203,11 @@ public class QRGenerator extends AndroidNonvisibleComponent {
                 @Override
                 public void run() {
                     if (success) {
-                        String output = file.getPath();
+                        final String output;
                         if (scope != FileScope.App)
-                            output = "file://" + output;
+                            output = "file://" + file.getPath();
+                        else
+                            output = file.getPath();
                         Generated(output);
                     } else
                         ErrorOccurred("Generate", "Unable to generate barcode.");
