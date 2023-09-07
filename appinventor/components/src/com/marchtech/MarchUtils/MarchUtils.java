@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.FutureTask;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,6 +25,7 @@ import com.google.appinventor.components.runtime.util.YailList;
 import com.marchtech.Icon;
 import com.marchtech.MarchUtils.helpers.Sort;
 
+import android.app.Activity;
 import android.content.Context;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
@@ -31,10 +33,14 @@ import android.net.Uri;
 @DesignerComponent(version = 1, description = "Extension to help you.", category = ComponentCategory.EXTENSION, nonVisible = true, iconName = Icon.ICON)
 @SimpleObject(external = true)
 public class MarchUtils extends AndroidNonvisibleComponent {
+    private final Activity activity;
     private final Context context;
+
+    private FutureTask<Void> lastTask = null;
 
     public MarchUtils(ComponentContainer container) {
         super(container.$form());
+        activity = container.$context();
         context = container.$context();
     }
 
@@ -378,11 +384,16 @@ public class MarchUtils extends AndroidNonvisibleComponent {
         final String mFilePath = filePath;
         if (filePath.contains("file://"))
             filePath = filePath.replaceAll("file://", "");
-        java.io.File file = new File(filePath);
+        final java.io.File file = new File(filePath);
         MediaScannerConnection.scanFile(context, new String[] { file.toString() }, null,
                 new MediaScannerConnection.OnScanCompletedListener() {
                     public void onScanCompleted(String path, Uri uri) {
-                        GalleryRefreshed(mFilePath, uri.toString());
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                GalleryRefreshed(mFilePath, uri.toString());
+                            }
+                        });
                     }
                 });
     }
