@@ -370,16 +370,19 @@ public class MarchUtils extends AndroidNonvisibleComponent {
 
     @SimpleEvent(description = "An Event that occurrs when gallery has been refreshed.")
     public void GalleryRefreshed(String filePath, String uri) {
-        EventDispatcher.dispatchEvent(this, "GalleryRefreshed", filePath);
+        EventDispatcher.dispatchEvent(this, "GalleryRefreshed", filePath, uri);
     }
 
     @SimpleFunction(description = "To Refresh gallery with specific file path.")
     public void RefreshGallery(String filePath) {
+        final String mFilePath = filePath;
+        if (filePath.contains("file://"))
+            filePath = filePath.replaceAll("file://", "");
         java.io.File file = new File(filePath);
         MediaScannerConnection.scanFile(context, new String[] { file.toString() }, null,
                 new MediaScannerConnection.OnScanCompletedListener() {
                     public void onScanCompleted(String path, Uri uri) {
-                        GalleryRefreshed(path, uri.toString());
+                        GalleryRefreshed(mFilePath, uri.toString());
                     }
                 });
     }
