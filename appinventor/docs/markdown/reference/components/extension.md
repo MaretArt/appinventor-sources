@@ -573,8 +573,9 @@ None
 ### Events  {#MarchUtils-Events}
 
 {:.events}
-None
 
+{:id="MarchUtils.GalleryRefreshed"} GalleryRefreshed(*filePath*{:.text},*uri*{:.text})
+: An Event that occurrs when gallery has been refreshed.
 
 ### Methods  {#MarchUtils-Methods}
 
@@ -600,6 +601,9 @@ None
 
 {:id="MarchUtils.MapInteger" class="method returns number"} <i/> MapInteger(*value*{:.number},*fromMin*{:.number},*fromMax*{:.number},*toMin*{:.number},*toMax*{:.number})
 : For using map function.
+
+{:id="MarchUtils.RefreshGallery" class="method"} <i/> RefreshGallery(*filePath*{:.text})
+: To Refresh gallery with specific file path.
 
 {:id="MarchUtils.RemoveAllContainsValue" class="method returns list"} <i/> RemoveAllContainsValue(*list*{:.list},*keyPath*{:.text},*value*{:.any})
 : Returns a list after remove all contains value in the given list with dictionary value.
