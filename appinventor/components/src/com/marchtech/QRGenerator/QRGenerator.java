@@ -7,9 +7,11 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.FutureTask;
 
@@ -17,7 +19,8 @@ import com.google.appinventor.components.annotations.*;
 import com.google.appinventor.components.common.*;
 import com.google.appinventor.components.runtime.*;
 import com.google.appinventor.components.runtime.util.AsynchUtil;
-
+import com.google.appinventor.components.runtime.util.BulkPermissionRequest;
+import com.google.appinventor.components.runtime.util.FileUtil;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.DecodeHintType;
@@ -43,13 +46,17 @@ import android.graphics.Matrix;
 
 @DesignerComponent(version = 1, description = "Extension to generate qr code.", category = ComponentCategory.EXTENSION, nonVisible = true, iconName = Icon.ICON)
 @SimpleObject(external = true)
-@UsesPermissions(permissionNames = READ_EXTERNAL_STORAGE + "," + WRITE_EXTERNAL_STORAGE)
+@UsesPermissions({ READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE })
 @UsesLibraries(libraries = "zxing-3.5.2.jar")
 public class QRGenerator extends AndroidNonvisibleComponent {
     private Activity activity;
     private FutureTask<Void> lastTask = null;
 
     private boolean useAddDecoders = false;
+    private boolean save;
+
+    private boolean haveReadPermission = false;
+    private boolean haveWritePermission = false;
 
     private int WIDTH = 300;
     private int HEIGHT = 300;
@@ -131,20 +138,57 @@ public class QRGenerator extends AndroidNonvisibleComponent {
     }
 
     @SimpleFunction(description = "To generate qr code.")
-    public void Generate(final String content, final String outputPath, final String logoPath,
+    public void Generate(final String content, final FileScope scope, final String fileName, final String logoPath,
             final FileFormat fileFormat, final BarFormat barFormat, @Options(Charset.class) final String charset) {
+        save = true;
         lastTask = new FutureTask<Void>(new Runnable() {
             @Override
             public void run() {
-                performGenerate(content, outputPath, logoPath, fileFormat, barFormat, charset);
+                performGenerate(content, scope, fileName, logoPath, fileFormat, barFormat, charset);
             }
         }, null);
 
         AsynchUtil.runAsynchronously(lastTask);
     }
 
-    private void performGenerate(final String content, final String outputPath, final String logoPath,
+    private void performGenerate(final String content, final FileScope scope, final String fileName,
+            final String logoPath,
             final FileFormat fileFormat, final BarFormat barFormat, final String charset) {
+        final List<String> neededPermissions = new ArrayList<>();
+        if (fileName != null && FileUtil.needsReadPermission(form, fileName) && !haveReadPermission) {
+            neededPermissions.add(READ_EXTERNAL_STORAGE);
+        }
+
+        final String outputPath;
+        if (save) {
+            outputPath = FileUtil.resolveFileName(form, fileName, scope);
+            if (FileUtil.needsWritePermission(form, outputPath) && !haveWritePermission)
+                neededPermissions.add(WRITE_EXTERNAL_STORAGE);
+        } else
+            outputPath = FileUtil.resolveFileName(form, "QRGenerator", FileScope.Cache);
+
+        if (neededPermissions.size() > 0 && !haveReadPermission) {
+            final QRGenerator me = this;
+            form.askPermission(new BulkPermissionRequest(this, "Generate", neededPermissions.toArray(new String[0])) {
+                @Override
+                public void onGranted() {
+                    if (neededPermissions.contains(READ_EXTERNAL_STORAGE))
+                        me.haveReadPermission = true;
+                    if (neededPermissions.contains(WRITE_EXTERNAL_STORAGE))
+                        me.haveWritePermission = true;
+
+                    AsynchUtil.runAsynchronously(new Runnable() {
+                        @Override
+                        public void run() {
+                            me.performGenerate(content, scope, fileName, logoPath, fileFormat, barFormat, charset);
+                        }
+                    });
+                }
+            });
+
+            return;
+        }
+
         final File file = new File(outputPath);
         try {
             final FileOutputStream output = new FileOutputStream(file);
