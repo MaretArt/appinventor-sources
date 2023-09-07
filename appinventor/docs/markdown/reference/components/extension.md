@@ -724,6 +724,9 @@ Component for OneSignalScheduler
 {:id="OneSignalScheduler.CreateSchedule" class="method"} <i/> CreateSchedule(*id*{:.text},*segment*{:.text},*messages*{:.dictionary},*title*{:.dictionary},*dateTime*{:.text},*timezone*{:.text},*data*{:.dictionary})
 : To create schedule of onesignal push notifications.
 
+{:id="OneSignalScheduler.CreateScheduleToIds" class="method"} <i/> CreateScheduleToIds(*id*{:.text},*subscriptionIds*{:.list},*messages*{:.dictionary},*title*{:.dictionary},*dateTime*{:.text},*timezone*{:.text},*data*{:.dictionary})
+: To create schedule of onesignal push notifications with subscription ids.
+
 {:id="OneSignalScheduler.DeleteSchedule" class="method"} <i/> DeleteSchedule(*id*{:.text},*notificationId*{:.text})
 : To delete schedule of onesignal push notifications.
 
@@ -772,7 +775,7 @@ Component for QRGenerator
 
 {:.methods}
 
-{:id="QRGenerator.Decode" class="method"} <i/> Decode(*filePath*{:.text})
+{:id="QRGenerator.Decode" class="method"} <i/> Decode(*scope*{:.com.google.appinventor.components.common.FileScopeEnum},*fileName*{:.text})
 : To decode barcode from file.
 
 {:id="QRGenerator.Generate" class="method"} <i/> Generate(*content*{:.text},*scope*{:.com.google.appinventor.components.common.FileScopeEnum},*fileName*{:.text},*logoScope*{:.com.google.appinventor.components.common.FileScopeEnum},*logoPath*{:.text},*fileFormat*{:.com.marchtech.QRGenerator.helpers.FileFormatEnum},*barFormat*{:.com.marchtech.QRGenerator.helpers.BarFormatEnum},*charset*{:.text})
