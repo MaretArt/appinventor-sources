@@ -778,7 +778,7 @@ Component for QRGenerator
 {:id="QRGenerator.Generate" class="method"} <i/> Generate(*content*{:.text},*scope*{:.com.google.appinventor.components.common.FileScopeEnum},*fileName*{:.text},*logoScope*{:.com.google.appinventor.components.common.FileScopeEnum},*logoPath*{:.text},*fileFormat*{:.com.marchtech.QRGenerator.helpers.FileFormatEnum},*barFormat*{:.com.marchtech.QRGenerator.helpers.BarFormatEnum},*charset*{:.text})
 : To generate qr code.
 
-{:id="QRGenerator.GenerateOnImage" class="method"} <i/> GenerateOnImage(*image*{:.component},*content*{:.text},*scope*{:.com.google.appinventor.components.common.FileScopeEnum},*logoPath*{:.text},*fileFormat*{:.com.marchtech.QRGenerator.helpers.FileFormatEnum},*barFormat*{:.com.marchtech.QRGenerator.helpers.BarFormatEnum},*charset*{:.text})
+{:id="QRGenerator.GenerateOnImage" class="method"} <i/> GenerateOnImage(*imageComponent*{:.component},*content*{:.text},*logoScope*{:.com.google.appinventor.components.common.FileScopeEnum},*logoPath*{:.text},*barFormat*{:.com.marchtech.QRGenerator.helpers.BarFormatEnum},*charset*{:.text})
 : To generate qr code on image component without save it.
 
 ## SimpleBluetooth  {#SimpleBluetooth}
