@@ -387,7 +387,7 @@ public class MarchUtils extends AndroidNonvisibleComponent {
         final java.io.File file = new File(filePath);
         MediaScannerConnection.scanFile(context, new String[] { file.toString() }, null,
                 new MediaScannerConnection.OnScanCompletedListener() {
-                    public void onScanCompleted(String path, Uri uri) {
+                    public void onScanCompleted(final String path, final Uri uri) {
                         activity.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
