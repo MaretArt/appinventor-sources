@@ -510,7 +510,7 @@ public class OneSignalScheduler extends AndroidNonvisibleComponent {
         requestHeadersMap.put("Authorization", list2);
 
         this.id = id;
-        requestTextImpl(jsonString, "UTF-8", "CreateSchedule", "POST");
+        requestTextImpl(jsonString, "UTF-8", "CreateScheduleToIds", "POST");
     }
 
     @SimpleFunction(description = "To delete schedule of onesignal push notifications.")
