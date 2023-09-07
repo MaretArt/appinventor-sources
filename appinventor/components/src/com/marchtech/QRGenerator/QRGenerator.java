@@ -186,7 +186,8 @@ public class QRGenerator extends AndroidNonvisibleComponent {
             return;
         }
 
-        final File file = new File(outputPath);
+        final String path = outputPath.replaceAll("file://", "");
+        final File file = new File(path);
         try {
             final FileOutputStream output = new FileOutputStream(file);
             final Bitmap bitmap = writer(content, BarcodeFormat.valueOf(barFormat.toString()), WIDTH, HEIGHT, MARGIN,
