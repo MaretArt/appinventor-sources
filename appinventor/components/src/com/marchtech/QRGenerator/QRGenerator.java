@@ -161,6 +161,9 @@ public class QRGenerator extends AndroidNonvisibleComponent {
         else
             outputPath = FileUtil.resolveFileName(form, "QRGenerator", FileScope.Cache);
 
+        if (FileUtil.needsWritePermission(form, outputPath) && !haveWritePermission)
+            neededPermissions.add(WRITE_EXTERNAL_STORAGE);
+
         if (neededPermissions.size() > 0 && !haveReadPermission) {
             final QRGenerator me = this;
             form.askPermission(new BulkPermissionRequest(this, "Generate", neededPermissions.toArray(new String[0])) {
