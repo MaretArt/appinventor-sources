@@ -212,7 +212,12 @@ public class QRGenerator extends AndroidNonvisibleComponent {
             return;
         }
 
-        final String logo = FileUtil.resolveFileName(form, logoPath, logoScope).replaceAll("file://", "");
+        final String logo;
+        if (!logoPath.isEmpty())
+            logo = FileUtil.resolveFileName(form, logoPath, logoScope).replaceAll("file://", "");
+        else
+            logo = "";
+
         final String path = outputPath.replaceAll("file://", "");
         final File file = new File(path);
         try {
