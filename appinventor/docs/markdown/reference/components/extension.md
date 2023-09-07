@@ -768,7 +768,7 @@ Component for QRGenerator
 {:id="QRGenerator.Decode" class="method"} <i/> Decode(*filePath*{:.text})
 : To decode barcode from file.
 
-{:id="QRGenerator.Generate" class="method"} <i/> Generate(*content*{:.text},*outputPath*{:.text},*logoPath*{:.text},*fileFormat*{:.com.marchtech.QRGenerator.helpers.FileFormatEnum},*barFormat*{:.com.marchtech.QRGenerator.helpers.BarFormatEnum},*charset*{:.text})
+{:id="QRGenerator.Generate" class="method"} <i/> Generate(*content*{:.text},*scope*{:.com.google.appinventor.components.common.FileScopeEnum},*fileName*{:.text},*logoPath*{:.text},*fileFormat*{:.com.marchtech.QRGenerator.helpers.FileFormatEnum},*barFormat*{:.com.marchtech.QRGenerator.helpers.BarFormatEnum},*charset*{:.text})
 : To generate qr code.
 
 ## SimpleBluetooth  {#SimpleBluetooth}
