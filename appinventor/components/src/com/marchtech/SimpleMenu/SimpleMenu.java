@@ -33,7 +33,6 @@ public class SimpleMenu extends AndroidNonvisibleComponent {
         if (component instanceof HorizontalArrangement) {
             HorizontalArrangement comp = (HorizontalArrangement) component;
             rLayout.addView(comp.getView(), RelativeLayout.CENTER_IN_PARENT);
-            rLayout.addView(comp.getView());
         }
     }
 }
