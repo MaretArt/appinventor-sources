@@ -51,8 +51,6 @@ public class SimpleMenu extends AndroidNonvisibleComponent {
         alignmentH = form.AlignHorizontal();
         alignmentV = form.AlignVertical();
 
-        Test(alignmentH, alignmentV);
-
         if (layout.getView().getWidth() == ViewGroup.LayoutParams.MATCH_PARENT
                 && layout.getView().getHeight() == ViewGroup.LayoutParams.MATCH_PARENT)
             componentParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
@@ -126,7 +124,30 @@ public class SimpleMenu extends AndroidNonvisibleComponent {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    if (layout.getView().getId() < 1)
+                        layout.getView().setId(View.generateViewId());
 
+                    if (rParent == null) {
+                        parent.removeAllViews();
+                        layout.getView().setLayoutParams(componentParams);
+                        rLayout.addView(layout.getView(), componentParams);
+
+                        final ViewGroup prevRootParent = (ViewGroup) rLayout.getParent();
+                        if (prevRootParent != null)
+                            prevRootParent.removeView(rLayout);
+
+                        parent.addView(rLayout, componentParams);
+                        rParent = parent;
+                    } else {
+                        parent.removeView(layout.getView());
+                        layout.getView().setLayoutParams(componentParams);
+                        rLayout.addView(layout.getView(), componentParams);
+                    }
+
+                    rLayout.invalidate();
+                    rLayout.requestLayout();
+                    rParent.invalidate();
+                    rParent.requestLayout();
                 }
             });
         }
