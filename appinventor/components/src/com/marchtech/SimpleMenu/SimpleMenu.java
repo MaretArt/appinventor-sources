@@ -1,7 +1,6 @@
 package com.marchtech.SimpleMenu;
 
 import android.app.Activity;
-import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
