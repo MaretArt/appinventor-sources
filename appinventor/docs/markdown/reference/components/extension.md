@@ -1234,8 +1234,9 @@ None
 ### Events  {#SimpleMenu-Events}
 
 {:.events}
-None
 
+{:id="SimpleMenu.Test"} Test(*value1*{:.any},*value2*{:.any})
+: Event for Test
 
 ### Methods  {#SimpleMenu-Methods}
 
