@@ -5,10 +5,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import java.util.concurrent.FutureTask;
+
 import com.google.appinventor.components.annotations.*;
 import com.google.appinventor.components.common.*;
 import com.google.appinventor.components.runtime.*;
-
+import com.google.appinventor.components.runtime.util.AsynchUtil;
 import com.marchtech.Icon;
 import com.marchtech.SimpleMenu.helpers.Placement;
 
@@ -28,6 +30,8 @@ public class SimpleMenu extends AndroidNonvisibleComponent {
 
     private int alignmentH;
     private int alignmentV;
+
+    private FutureTask<Void> lastTask = null;
 
     public SimpleMenu(ComponentContainer container) {
         super(container.$form());
@@ -119,6 +123,17 @@ public class SimpleMenu extends AndroidNonvisibleComponent {
             }
         }
 
+        lastTask = new FutureTask<Void>(new Runnable() {
+            @Override
+            public void run() {
+                initialize(layout);
+            }
+        }, null);
+
+        AsynchUtil.runAsynchronously(lastTask);
+    }
+
+    private void initialize(final AndroidViewComponent layout) {
         final ViewGroup parent = (ViewGroup) layout.getView().getParent();
         if (parent != null) {
             activity.runOnUiThread(new Runnable() {
