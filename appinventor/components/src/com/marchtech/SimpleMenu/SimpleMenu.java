@@ -16,6 +16,7 @@ import com.marchtech.SimpleMenu.helpers.Placement;
 @DesignerComponent(version = 1, description = "Extension to help you create menu.", category = ComponentCategory.EXTENSION, nonVisible = true, iconName = Icon.ICON)
 @SimpleObject(external = true)
 public class SimpleMenu extends AndroidNonvisibleComponent {
+    private final Activity activity;
     private final Activity context;
     private final Form form;
     private final Handler uiHandler = new Handler();
@@ -33,6 +34,7 @@ public class SimpleMenu extends AndroidNonvisibleComponent {
 
     public SimpleMenu(ComponentContainer container) {
         super(container.$form());
+        activity = container.$context();
         context = container.$context();
         form = container.$form();
 
@@ -120,10 +122,10 @@ public class SimpleMenu extends AndroidNonvisibleComponent {
 
         final ViewGroup parent = (ViewGroup) layout.getView().getParent();
         if (parent != null) {
-            if (getRootParent() == null) {
-                uiHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (rParent != null) {
                         parent.removeAllViews();
                         setRootParent(parent);
                         if (layout.getView().getId() < 1)
@@ -142,12 +144,7 @@ public class SimpleMenu extends AndroidNonvisibleComponent {
                         getView().requestLayout();
                         getRootParent().invalidate();
                         getRootParent().requestLayout();
-                    }
-                }, 100);
-            } else {
-                uiHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
+                    } else {
                         parent.removeView(layout.getView());
                         if (layout.getView().getId() < 1)
                             layout.getView().setId(View.generateViewId());
@@ -160,8 +157,8 @@ public class SimpleMenu extends AndroidNonvisibleComponent {
                         getRootParent().invalidate();
                         getRootParent().requestLayout();
                     }
-                }, 100);
-            }
+                }
+            });
         }
     }
 
@@ -169,10 +166,10 @@ public class SimpleMenu extends AndroidNonvisibleComponent {
     public void Add(final AndroidViewComponent component, final Placement placement) {
         final ViewGroup parent = (ViewGroup) component.getView().getParent();
         if (parent != null) {
-            if (getRootParent() == null) {
-                uiHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (rParent != null) {
                         if (component.getView().getId() < 1)
                             component.getView().setId(View.generateViewId());
 
@@ -192,12 +189,7 @@ public class SimpleMenu extends AndroidNonvisibleComponent {
                         getView().requestLayout();
                         getRootParent().invalidate();
                         getRootParent().requestLayout();
-                    }
-                }, 100);
-            } else {
-                uiHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
+                    } else {
                         if (component.getView().getId() < 1)
                             component.getView().setId(View.generateViewId());
 
@@ -218,8 +210,8 @@ public class SimpleMenu extends AndroidNonvisibleComponent {
                         getRootParent().invalidate();
                         getRootParent().requestLayout();
                     }
-                }, 100);
-            }
+                }
+            });
         }
     }
 
