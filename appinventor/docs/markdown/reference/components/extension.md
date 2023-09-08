@@ -1241,11 +1241,11 @@ None
 
 {:.methods}
 
-{:id="SimpleMenu.Add" class="method"} <i/> Add(*component*{:.component})
-: To add view.
+{:id="SimpleMenu.Add" class="method"} <i/> Add(*component*{:.component},*placement*{:.com.marchtech.SimpleMenu.helpers.PlacementEnum})
+: To add view on parent layout.
 
 {:id="SimpleMenu.Initialize" class="method"} <i/> Initialize(*layout*{:.component})
-: To initialize.
+: To initialize component.
 
 ## SimplePedometer  {#SimplePedometer}
 
