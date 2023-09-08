@@ -17,9 +17,7 @@ import com.marchtech.SimpleMenu.helpers.Placement;
 @SimpleObject(external = true)
 public class SimpleMenu extends AndroidNonvisibleComponent {
     private final Activity activity;
-    private final Activity context;
     private final Form form;
-    private final Handler uiHandler = new Handler();
 
     private RelativeLayout rLayout;
     private RelativeLayout.LayoutParams componentParams;
@@ -35,10 +33,9 @@ public class SimpleMenu extends AndroidNonvisibleComponent {
     public SimpleMenu(ComponentContainer container) {
         super(container.$form());
         activity = container.$context();
-        context = container.$context();
         form = container.$form();
 
-        rLayout = new RelativeLayout(context);
+        rLayout = new RelativeLayout(container.$context());
         rLayout.setId(999);
 
         lParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
