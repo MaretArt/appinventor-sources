@@ -162,12 +162,11 @@ public class SimpleMenu extends AndroidNonvisibleComponent {
                          * rLayout.addView(layout.getView(), componentParams);
                          */
                     }
-                    /*
-                     * rLayout.invalidate();
-                     * rLayout.requestLayout();
-                     * rParent.invalidate();
-                     * rParent.requestLayout();
-                     */
+
+                    rLayout.invalidate();
+                    rLayout.requestLayout();
+                    rParent.invalidate();
+                    rParent.requestLayout();
                 }
             });
         }
