@@ -42,8 +42,8 @@ public class SimpleMenu extends AndroidNonvisibleComponent {
     }
 
     @SimpleEvent
-    public void Test(int horizontal, int vertical) {
-        EventDispatcher.dispatchEvent(this, "Test", horizontal, vertical);
+    public void Test(Object value1, Object value2) {
+        EventDispatcher.dispatchEvent(this, "Test", value1, value2);
     }
 
     @SimpleFunction(description = "To initialize component.")
@@ -128,26 +128,33 @@ public class SimpleMenu extends AndroidNonvisibleComponent {
                         layout.getView().setId(View.generateViewId());
 
                     if (rParent == null) {
-                        parent.removeAllViews();
-                        layout.getView().setLayoutParams(componentParams);
-                        rLayout.addView(layout.getView(), componentParams);
-
-                        final ViewGroup prevRootParent = (ViewGroup) rLayout.getParent();
-                        if (prevRootParent != null)
-                            prevRootParent.removeView(rLayout);
-
-                        parent.addView(rLayout, componentParams);
-                        rParent = parent;
+                        Test("rParent == null", "");
+                        /*
+                         * parent.removeAllViews();
+                         * layout.getView().setLayoutParams(componentParams);
+                         * rLayout.addView(layout.getView(), componentParams);
+                         * 
+                         * final ViewGroup prevRootParent = (ViewGroup) rLayout.getParent();
+                         * if (prevRootParent != null)
+                         * prevRootParent.removeView(rLayout);
+                         * 
+                         * parent.addView(rLayout, componentParams);
+                         * rParent = parent;
+                         */
                     } else {
-                        parent.removeView(layout.getView());
-                        layout.getView().setLayoutParams(componentParams);
-                        rLayout.addView(layout.getView(), componentParams);
+                        Test("rParent != null", "");
+                        /*
+                         * parent.removeView(layout.getView());
+                         * layout.getView().setLayoutParams(componentParams);
+                         * rLayout.addView(layout.getView(), componentParams);
+                         */
                     }
-
-                    rLayout.invalidate();
-                    rLayout.requestLayout();
-                    rParent.invalidate();
-                    rParent.requestLayout();
+                    /*
+                     * rLayout.invalidate();
+                     * rLayout.requestLayout();
+                     * rParent.invalidate();
+                     * rParent.requestLayout();
+                     */
                 }
             });
         }
