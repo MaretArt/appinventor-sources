@@ -119,23 +119,28 @@ public class SimpleMenu extends AndroidNonvisibleComponent {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (layout.getView().getId() < 1)
-                        layout.getView().setId(View.generateViewId());
+                    if (rParent == null) {
+                        if (layout.getView().getId() < 1)
+                            layout.getView().setId(View.generateViewId());
 
-                    if (rParent == null)
                         parent.removeAllViews();
-                    else
+                        layout.getView().setLayoutParams(componentParams);
+                        rLayout.addView(layout.getView(), 0, componentParams);
+
+                        final ViewGroup prevRootParent = (ViewGroup) rLayout.getParent();
+                        if (prevRootParent != null)
+                            prevRootParent.removeView(rLayout);
+
+                        parent.addView(rLayout, 0, lParams);
+                        rParent = parent;
+                    } else {
+                        if (layout.getView().getId() < 1)
+                            layout.getView().setId(View.generateViewId());
+
                         parent.removeView(layout.getView());
-
-                    layout.getView().setLayoutParams(componentParams);
-                    rLayout.addView(layout.getView(), 0, componentParams);
-
-                    final ViewGroup prevRootParent = (ViewGroup) rLayout.getParent();
-                    if (prevRootParent != null && rParent != null)
-                        prevRootParent.removeView(rLayout);
-
-                    parent.addView(rLayout, 0, lParams);
-                    rParent = parent;
+                        layout.getView().setLayoutParams(componentParams);
+                        rLayout.addView(layout.getView(), 0, componentParams);
+                    }
 
                     rLayout.invalidate();
                     rLayout.requestLayout();
