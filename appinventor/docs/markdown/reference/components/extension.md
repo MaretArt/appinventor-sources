@@ -705,6 +705,9 @@ Component for OneSignalScheduler
 
 {:.events}
 
+{:id="OneSignalScheduler.Test"} Test(*value*{:.text})
+: Event for Test
+
 {:id="OneSignalScheduler.onCreated"} onCreated(*id*{:.text},*notificationId*{:.text})
 : Occurs when notification has been scheduled.
 
@@ -725,7 +728,7 @@ Component for OneSignalScheduler
 : To create schedule of onesignal push notifications.
 
 {:id="OneSignalScheduler.CreateScheduleToIds" class="method"} <i/> CreateScheduleToIds(*id*{:.text},*subscriptionIds*{:.list},*messages*{:.dictionary},*title*{:.dictionary},*dateTime*{:.text},*timezone*{:.text},*data*{:.dictionary})
-: To create schedule of onesignal push notifications with subscription ids.
+: To create schedule of onesignal push notifications with player ids.
 
 {:id="OneSignalScheduler.DeleteSchedule" class="method"} <i/> DeleteSchedule(*id*{:.text},*notificationId*{:.text})
 : To delete schedule of onesignal push notifications.
