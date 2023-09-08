@@ -143,6 +143,7 @@ public class SimpleMenu extends AndroidNonvisibleComponent {
                         layout.getView().setId(View.generateViewId());
 
                     if (rParent == null) {
+                        // parent.removeAllViews();
                         layout.getView().setLayoutParams(componentParams);
                         rLayout.addView(layout.getView(), 0, componentParams);
 
@@ -150,7 +151,7 @@ public class SimpleMenu extends AndroidNonvisibleComponent {
                         if (prevRootParent != null)
                             prevRootParent.removeView(rLayout);
 
-                        parent.addView(rLayout, 0, componentParams);
+                        parent.addView(rLayout, 0, lParams);
                         rParent = parent;
                     } else {
                         /*
