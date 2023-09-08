@@ -1240,8 +1240,12 @@ None
 ### Methods  {#SimpleMenu-Methods}
 
 {:.methods}
-None
 
+{:id="SimpleMenu.Add" class="method"} <i/> Add(*component*{:.component})
+: To add view.
+
+{:id="SimpleMenu.Initialize" class="method"} <i/> Initialize(*layout*{:.component})
+: To initialize.
 
 ## SimplePedometer  {#SimplePedometer}
 

@@ -24,8 +24,14 @@ public class SimpleMenu extends AndroidNonvisibleComponent {
     }
 
     @SimpleFunction(description = "To initialize.")
-    public void Initialize(Layout layout) {
-        rLayout.addView(layout.getLayoutManager());
+    public void Initialize(Component layout) {
+        if (layout instanceof HorizontalArrangement) {
+            HorizontalArrangement lyt = (HorizontalArrangement) layout;
+            rLayout.addView(lyt.getView());
+        } else if (layout instanceof VerticalArrangement) {
+            VerticalArrangement lyt = (VerticalArrangement) layout;
+            rLayout.addView(lyt.getView());
+        }
     }
 
     @SimpleFunction(description = "To add view.")
