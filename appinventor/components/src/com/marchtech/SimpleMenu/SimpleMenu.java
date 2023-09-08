@@ -150,8 +150,6 @@ public class SimpleMenu extends AndroidNonvisibleComponent {
                         final ViewGroup prevRootParent = (ViewGroup) rLayout.getParent();
                         if (prevRootParent != null)
                             prevRootParent.removeView(rLayout);
-                        else
-                            Test("rParent == null", "prevRootParent == null");
 
                         parent.addView(rLayout, componentParams);
                         rParent = parent;
