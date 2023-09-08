@@ -30,9 +30,6 @@ public class SimpleMenu extends AndroidNonvisibleComponent {
 
     private int alignmentH;
     private int alignmentV;
-    private int indexZ;
-
-    private String name = "layer";
 
     public SimpleMenu(ComponentContainer container) {
         super(container.$form());
