@@ -26,7 +26,7 @@ public class SimpleMenu extends AndroidNonvisibleComponent {
     private RelativeLayout.LayoutParams placedComponentParams;
     private RelativeLayout.LayoutParams secondComponentParams;
 
-    private ViewGroup rParent;
+    private ViewGroup rParent = null;
     private ViewGroup.LayoutParams lParams;
 
     private int alignmentH;
@@ -40,8 +40,6 @@ public class SimpleMenu extends AndroidNonvisibleComponent {
 
         rLayout = new RelativeLayout(context);
         rLayout.setId(999);
-
-        setRootParent(null);
 
         lParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         rLayout.setLayoutParams(lParams);
@@ -127,7 +125,7 @@ public class SimpleMenu extends AndroidNonvisibleComponent {
                 public void run() {
                     if (rParent != null) {
                         parent.removeAllViews();
-                        setRootParent(parent);
+                        rParent = parent;
                         if (layout.getView().getId() < 1)
                             layout.getView().setId(View.generateViewId());
 
@@ -140,10 +138,10 @@ public class SimpleMenu extends AndroidNonvisibleComponent {
 
                         parent.addView(rLayout, 0, lParams);
 
-                        getView().invalidate();
-                        getView().requestLayout();
-                        getRootParent().invalidate();
-                        getRootParent().requestLayout();
+                        rLayout.invalidate();
+                        rLayout.requestLayout();
+                        rParent.invalidate();
+                        rParent.requestLayout();
                     } else {
                         parent.removeView(layout.getView());
                         if (layout.getView().getId() < 1)
@@ -152,10 +150,10 @@ public class SimpleMenu extends AndroidNonvisibleComponent {
                         layout.getView().setLayoutParams(componentParams);
                         rLayout.addView(layout.getView(), 0, componentParams);
 
-                        getView().invalidate();
-                        getView().requestLayout();
-                        getRootParent().invalidate();
-                        getRootParent().requestLayout();
+                        rLayout.invalidate();
+                        rLayout.requestLayout();
+                        rParent.invalidate();
+                        rParent.requestLayout();
                     }
                 }
             });
@@ -183,12 +181,12 @@ public class SimpleMenu extends AndroidNonvisibleComponent {
                             prevRootParent.removeView(rLayout);
 
                         parent.addView(rLayout, 0, lParams);
-                        setRootParent(parent);
+                        rParent = parent;
 
-                        getView().invalidate();
-                        getView().requestLayout();
-                        getRootParent().invalidate();
-                        getRootParent().requestLayout();
+                        rLayout.invalidate();
+                        rLayout.requestLayout();
+                        rParent.invalidate();
+                        rParent.requestLayout();
                     } else {
                         if (component.getView().getId() < 1)
                             component.getView().setId(View.generateViewId());
@@ -203,28 +201,16 @@ public class SimpleMenu extends AndroidNonvisibleComponent {
                             prevRootParent.removeView(rLayout);
 
                         parent.addView(rLayout, 0, lParams);
-                        setRootParent(parent);
+                        rParent = parent;
 
-                        getView().invalidate();
-                        getView().requestLayout();
-                        getRootParent().invalidate();
-                        getRootParent().requestLayout();
+                        rLayout.invalidate();
+                        rLayout.requestLayout();
+                        rParent.invalidate();
+                        rParent.requestLayout();
                     }
                 }
             });
         }
-    }
-
-    private View getView() {
-        return rLayout;
-    }
-
-    private ViewGroup getRootParent() {
-        return rParent;
-    }
-
-    private void setRootParent(ViewGroup rootParent) {
-        this.rParent = rootParent;
     }
 
     private RelativeLayout.LayoutParams createLayoutParams(AndroidViewComponent component, Placement placement) {
