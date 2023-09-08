@@ -12,26 +12,15 @@ import com.marchtech.Icon;
 @DesignerComponent(version = 1, description = "Extension to help you create menu.", category = ComponentCategory.EXTENSION, nonVisible = true, iconName = Icon.ICON)
 @SimpleObject(external = true)
 public class SimpleMenu extends AndroidNonvisibleComponent {
-    private final Context context;
-
     private RelativeLayout rLayout;
 
     public SimpleMenu(ComponentContainer container) {
         super(container.$form());
-        context = container.$context();
-
-        rLayout = new RelativeLayout(context);
     }
 
     @SimpleFunction(description = "To initialize.")
-    public void Initialize(Component layout) {
-        if (layout instanceof HorizontalArrangement) {
-            HorizontalArrangement lyt = (HorizontalArrangement) layout;
-            rLayout.addView(lyt.getView());
-        } else if (layout instanceof VerticalArrangement) {
-            VerticalArrangement lyt = (VerticalArrangement) layout;
-            rLayout.addView(lyt.getView());
-        }
+    public void Initialize(ComponentContainer layout) {
+        rLayout = new RelativeLayout(layout.$context());
     }
 
     @SimpleFunction(description = "To add view.")
