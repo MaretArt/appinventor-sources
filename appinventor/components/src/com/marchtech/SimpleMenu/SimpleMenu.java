@@ -20,13 +20,13 @@ public class SimpleMenu extends AndroidNonvisibleComponent {
     private final Activity activity;
     private final Form form;
 
-    private RelativeLayout rLayout;
+    private RelativeLayout rootLayout;
     private RelativeLayout.LayoutParams componentParams;
     private RelativeLayout.LayoutParams placedComponentParams;
     private RelativeLayout.LayoutParams secondComponentParams;
 
-    private ViewGroup rParent = null;
-    private ViewGroup.LayoutParams lParams;
+    private ViewGroup rootParent = null;
+    private ViewGroup.LayoutParams layoutParams;
 
     private int alignmentH;
     private int alignmentV;
@@ -38,11 +38,12 @@ public class SimpleMenu extends AndroidNonvisibleComponent {
         activity = container.$context();
         form = container.$form();
 
-        rLayout = new RelativeLayout(container.$context());
-        rLayout.setId(999);
+        rootLayout = new RelativeLayout(container.$context());
+        rootLayout.setId(999);
 
-        lParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        rLayout.setLayoutParams(lParams);
+        layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT);
+        rootLayout.setLayoutParams(layoutParams);
     }
 
     @SimpleEvent
@@ -142,29 +143,32 @@ public class SimpleMenu extends AndroidNonvisibleComponent {
                     if (layout.getView().getId() < 1)
                         layout.getView().setId(View.generateViewId());
 
-                    if (rParent == null) {
+                    if (rootParent == null) {
+                        final ViewGroup prevParent = parent;
+                        prevParent.removeView(layout.getView());
                         parent.removeAllViews();
                         layout.getView().setLayoutParams(componentParams);
-                        rLayout.addView(layout.getView(), 0, componentParams);
+                        rootLayout.addView(layout.getView(), 0, componentParams);
 
-                        final ViewGroup prevRootParent = (ViewGroup) rLayout.getParent();
+                        final ViewGroup prevRootParent = (ViewGroup) rootLayout.getParent();
                         if (prevRootParent != null)
-                            prevRootParent.removeView(rLayout);
+                            prevRootParent.removeView(rootLayout);
 
-                        parent.addView(rLayout, 0, lParams);
-                        rParent = parent;
+                        parent.addView(prevParent, 0, layoutParams);
+                        parent.addView(rootLayout, 1, layoutParams);
+                        rootParent = parent;
                     } else {
                         /*
                          * parent.removeView(layout.getView());
                          * layout.getView().setLayoutParams(componentParams);
-                         * rLayout.addView(layout.getView(), componentParams);
+                         * rootLayout.addView(layout.getView(), componentParams);
                          */
                     }
 
-                    rLayout.invalidate();
-                    rLayout.requestLayout();
-                    rParent.invalidate();
-                    rParent.requestLayout();
+                    rootLayout.invalidate();
+                    rootLayout.requestLayout();
+                    rootParent.invalidate();
+                    rootParent.requestLayout();
                 }
             });
         }
@@ -177,26 +181,26 @@ public class SimpleMenu extends AndroidNonvisibleComponent {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (rParent != null) {
+                    if (rootParent != null) {
                         if (component.getView().getId() < 1)
                             component.getView().setId(View.generateViewId());
 
                         secondComponentParams = createLayoutParams(component, placement);
                         parent.removeView(component.getView());
                         component.getView().setLayoutParams(secondComponentParams);
-                        rLayout.addView(component.getView(), 0, secondComponentParams);
+                        rootLayout.addView(component.getView(), 0, secondComponentParams);
 
-                        final ViewGroup prevRootParent = (ViewGroup) rLayout.getParent();
+                        final ViewGroup prevRootParent = (ViewGroup) rootLayout.getParent();
                         if (prevRootParent != null)
-                            prevRootParent.removeView(rLayout);
+                            prevRootParent.removeView(rootLayout);
 
-                        parent.addView(rLayout, 0, lParams);
-                        rParent = parent;
+                        parent.addView(rootLayout, 0, layoutParams);
+                        rootParent = parent;
 
-                        rLayout.invalidate();
-                        rLayout.requestLayout();
-                        rParent.invalidate();
-                        rParent.requestLayout();
+                        rootLayout.invalidate();
+                        rootLayout.requestLayout();
+                        rootParent.invalidate();
+                        rootParent.requestLayout();
                     }
                 }
             });
