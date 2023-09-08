@@ -41,10 +41,17 @@ public class SimpleMenu extends AndroidNonvisibleComponent {
         rLayout.setLayoutParams(lParams);
     }
 
+    @SimpleEvent
+    public void Test(int horizontal, int vertical) {
+        EventDispatcher.dispatchEvent(this, "Test", horizontal, vertical);
+    }
+
     @SimpleFunction(description = "To initialize component.")
     public void Initialize(final AndroidViewComponent layout) {
         alignmentH = form.AlignHorizontal();
         alignmentV = form.AlignVertical();
+
+        Test(alignmentH, alignmentV);
 
         if (layout.getView().getWidth() == ViewGroup.LayoutParams.MATCH_PARENT
                 && layout.getView().getHeight() == ViewGroup.LayoutParams.MATCH_PARENT)
@@ -119,33 +126,7 @@ public class SimpleMenu extends AndroidNonvisibleComponent {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (rParent == null) {
-                        if (layout.getView().getId() < 1)
-                            layout.getView().setId(View.generateViewId());
 
-                        parent.removeAllViews();
-                        layout.getView().setLayoutParams(componentParams);
-                        rLayout.addView(layout.getView(), 0, componentParams);
-
-                        final ViewGroup prevRootParent = (ViewGroup) rLayout.getParent();
-                        if (prevRootParent != null)
-                            prevRootParent.removeView(rLayout);
-
-                        parent.addView(rLayout, 0, lParams);
-                        rParent = parent;
-                    } else {
-                        if (layout.getView().getId() < 1)
-                            layout.getView().setId(View.generateViewId());
-
-                        parent.removeView(layout.getView());
-                        layout.getView().setLayoutParams(componentParams);
-                        rLayout.addView(layout.getView(), 0, componentParams);
-                    }
-
-                    rLayout.invalidate();
-                    rLayout.requestLayout();
-                    rParent.invalidate();
-                    rParent.requestLayout();
                 }
             });
         }
