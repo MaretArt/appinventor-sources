@@ -142,13 +142,13 @@ public class RelativeViews extends AndroidNonvisibleComponent {
                     if (rootParent == null) {
                         parent.removeView(layout.getView());
                         layout.getView().setLayoutParams(layoutParams);
-                        rootLayout.addView(layout.getView(), 0, layoutParams);
+                        // rootLayout.addView(layout.getView(), 0, layoutParams);
 
-                        final ViewGroup prevRootParent = (ViewGroup) rootLayout.getParent();
-                        if (prevRootParent != null)
-                            prevRootParent.removeView(rootLayout);
+                        // final ViewGroup prevRootParent = (ViewGroup) rootLayout.getParent();
+                        // if (prevRootParent != null)
+                        // prevRootParent.removeView(rootLayout);
 
-                        parent.addView(rootLayout, parent.getChildCount() + 1, rootParams);
+                        parent.addView(rootLayout, 0, rootParams);
                         rootParent = parent;
                     } else {
                         /*
