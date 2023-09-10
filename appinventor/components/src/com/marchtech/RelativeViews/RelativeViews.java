@@ -132,42 +132,57 @@ public class RelativeViews extends AndroidNonvisibleComponent {
     }
 
     private void initialize(final AndroidViewComponent layout) {
-        final ViewGroup parent = (ViewGroup) layout.getView().getParent();
-        if (parent != null) {
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (rootParent == null) {
                     if (layout.getView().getId() < 1)
                         layout.getView().setId(View.generateViewId());
 
-                    if (rootParent == null) {
-                        final ViewGroup prevParent = parent;
-                        prevParent.removeView(layout.getView());
-                        parent.removeAllViews();
-                        layout.getView().setLayoutParams(layoutParams);
-                        rootLayout.addView(prevParent, 0, layoutParams);
-                        rootLayout.addView(layout.getView(), prevParent.getChildCount(), layoutParams);
-
-                        final ViewGroup prevRootParent = (ViewGroup) rootLayout.getParent();
-                        if (prevRootParent != null)
-                            prevRootParent.removeView(rootLayout);
-
-                        parent.addView(rootLayout, 0, rootParams);
-                        rootParent = parent;
-                    } else {
-                        /*
-                         * parent.removeView(layout.getView());
-                         * layout.getView().setLayoutParams(layoutParams);
-                         * rootLayout.addView(layout.getView(), layoutParams);
-                         */
-                    }
+                    rootLayout.addView(layout.getView(), 0, rootParams);
+                    rootParent = rootLayout;
 
                     rootLayout.invalidate();
                     rootLayout.requestLayout();
                     rootParent.invalidate();
                     rootParent.requestLayout();
                 }
-            });
-        }
+            }
+        });
+
+        // final ViewGroup parent = (ViewGroup) layout.getView().getParent();
+        // if (parent != null) {
+        // activity.runOnUiThread(new Runnable() {
+        // @Override
+        // public void run() {
+        // if (layout.getView().getId() < 1)
+        // layout.getView().setId(View.generateViewId());
+
+        // if (rootParent == null) {
+        // parent.removeAllViews();
+        // layout.getView().setLayoutParams(layoutParams);
+        // rootLayout.addView(layout.getView(), 0, layoutParams);
+
+        // final ViewGroup prevRootParent = (ViewGroup) rootLayout.getParent();
+        // if (prevRootParent != null)
+        // prevRootParent.removeView(rootLayout);
+
+        // parent.addView(rootLayout, 0, rootParams);
+        // rootParent = parent;
+        // } else {
+        // /*
+        // * parent.removeView(layout.getView());
+        // * layout.getView().setLayoutParams(layoutParams);
+        // * rootLayout.addView(layout.getView(), layoutParams);
+        // */
+        // }
+
+        // rootLayout.invalidate();
+        // rootLayout.requestLayout();
+        // rootParent.invalidate();
+        // rootParent.requestLayout();
+        // }
+        // });
+        // }
     }
 }
