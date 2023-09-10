@@ -37,6 +37,10 @@ public class RelativeViews extends AndroidNonvisibleComponent {
 
         rootLayout = new RelativeLayout(container.$context());
         rootLayout.setId(View.generateViewId());
+
+        rootParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT);
+        rootLayout.setLayoutParams(rootParams);
     }
 
     @SimpleEvent
@@ -133,22 +137,22 @@ public class RelativeViews extends AndroidNonvisibleComponent {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    rootParams = new ViewGroup.LayoutParams(parent.getWidth(), parent.getHeight());
-                    rootLayout.setLayoutParams(rootParams);
-
                     if (layout.getView().getId() < 1)
                         layout.getView().setId(View.generateViewId());
 
                     if (rootParent == null) {
-                        parent.removeView(layout.getView());
+                        final ViewGroup prevParent = parent;
+                        prevParent.removeView(layout.getView());
+                        parent.removeAllViews();
                         layout.getView().setLayoutParams(layoutParams);
-                        // rootLayout.addView(layout.getView(), 0, layoutParams);
+                        rootLayout.addView(prevParent, 0, layoutParams);
+                        rootLayout.addView(layout.getView(), prevParent.getChildCount(), layoutParams);
 
-                        // final ViewGroup prevRootParent = (ViewGroup) rootLayout.getParent();
-                        // if (prevRootParent != null)
-                        // prevRootParent.removeView(rootLayout);
+                        final ViewGroup prevRootParent = (ViewGroup) rootLayout.getParent();
+                        if (prevRootParent != null)
+                            prevRootParent.removeView(rootLayout);
 
-                        parent.addView(layout.getView(), 0, rootParams);
+                        parent.addView(rootLayout, 0, rootParams);
                         rootParent = parent;
                     } else {
                         /*
