@@ -133,6 +133,9 @@ public class RelativeViews extends AndroidNonvisibleComponent {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    rootParams = new ViewGroup.LayoutParams(parent.getWidth(), parent.getHeight());
+                    rootLayout.setLayoutParams(rootParams);
+
                     if (layout.getView().getId() < 1)
                         layout.getView().setId(View.generateViewId());
 
